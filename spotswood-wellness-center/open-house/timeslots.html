@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <figure class="wp-block-table is-style-stripes">
+    <table id="timeslots">
+      <tbody>
+        <tr>
+          <th>10am</th>
+          <td>10:00am - 10:15am</td>
+          <td>10:15am - 10:30am</td>
+          <td>10:30am - 10:45am</td>
+          <td>10:45am - 11:00am</td>
+        </tr>
+        <tr>
+          <th>11am</th>
+          <td>11:00am - 11:15am</td>
+          <td>11:15am - 11:30am</td>
+          <td>11:30am - 11:45am</td>
+          <td>11:45am - 12:00pm</td>
+        </tr>
+        <tr>
+          <th>12pm</th>
+          <td>12:00pm - 12:15pm</td>
+          <td>12:15pm - 12:30pm</td>
+          <td>12:30pm - 12:45pm</td>
+          <td>12:45pm - 1:00pm</td>
+        </tr>
+        <tr>
+          <th>1pm</th>
+          <td>1:00pm - 1:15pm</td>
+          <td>1:15pm - 1:30pm</td>
+          <td>1:30pm - 1:45pm</td>
+          <td>1:45pm - 2:00pm</td>
+        </tr>
+        <tr>
+          <th>2pm</th>
+          <td>2:00pm - 2:15pm</td>
+          <td>1:15pm - 2:30pm</td>
+          <td>2:30pm - 2:45pm</td>
+          <td>2:45pm - 3:00pm</td>
+        </tr>
+        <tr>
+          <th>3pm</th>
+          <td>3:00pm - 3:15pm</td>
+          <td>3:15pm - 3:30pm</td>
+          <td>3:30pm - 3:45pm</td>
+          <td>3:45pm - 4:00pm</td>
+        </tr>
+      </tbody>
+    </table>
+  </figure>
+
+  <div id="open-house-dialog" title="Create new user">
+    <p class="validateTips">All form fields are required.</p>
+
+    <form id="open-house-dialog-form" >
+      <fieldset>
+        <input type="hidden" name="time" id="open-house-time" class="open-house-data">
+
+        <label for="name">Name</label>
+        <input type="text" name="name" id="open-house-name" placeholder="Jane Smith" class="text ui-widget-content ui-corner-all open-house-data">
+
+        <label for="email">Email</label>
+        <input type="text" name="email" id="open-house-email" placeholder="jane@example.com" class="text ui-widget-content ui-corner-all open-house-data">
+
+        <label for="phone">Phone Number</label>
+        <input type="text" name="phone" id="open-house-phone" placeholder="Jane Smith" class="text ui-widget-content ui-corner-all open-house-data">
+        
+        <label for="partysize">Number of People</label>
+        <input type="text" name="partysize" id="open-house-partysize" value="1" class="text ui-widget-content ui-corner-all open-house-data">
+
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+      </fieldset>
+    </form>
+  </div>
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
+  <script src="https://mortoneer.github.io/spotswood-wellness-center/open-house/timeslots.js"></script>
+
+</body>
+
+</html>
+
+
+
+
