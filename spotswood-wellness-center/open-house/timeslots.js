@@ -46,10 +46,6 @@ $(function () {
     processForm();
   });
 
-  $("td").button().on("click", function () {
-    dialog.dialog("open");
-  });
-
   $('#timeslots td').each(function() {
     var time = $(this).text();
     
