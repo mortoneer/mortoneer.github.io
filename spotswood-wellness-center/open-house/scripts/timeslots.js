@@ -10,7 +10,7 @@ $(function () {
 
   var $successDialog = $('#open-house-registration-success').dialog({
     autoOpen: false,
-    height: 250,
+    height: 500,
     width: 350,
     modal: true,
     closeText: '',
