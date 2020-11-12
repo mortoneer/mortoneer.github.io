@@ -45,7 +45,7 @@ $(function () {
         name,
         email,
         phone,
-        time,
+        time: time.match(/1?[0-9]:[0-5][0-9][ap]m/)[0],
         partySize,
         type
       }),
