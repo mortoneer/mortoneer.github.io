@@ -6,6 +6,8 @@
 
 $(function () {
 
+  var convertTime = time => time.match(/1?[0-9]:[0-5][0-9][ap]m/)[0]
+
   $('body').addClass('open-house');
 
   var $successDialog = $('#open-house-registration-success').dialog({
@@ -45,7 +47,7 @@ $(function () {
         name,
         email,
         phone,
-        time: time.match(/1?[0-9]:[0-5][0-9][ap]m/)[0],
+        time: convertTime(time),
         partySize,
         type
       }),
@@ -118,14 +120,25 @@ $(function () {
     processForm();
   });
 
-  $('#open-house-timeslots td').each(function () {
-    var time = $(this).text();
+  $.get('https://zy9kzkpff3.execute-api.us-east-1.amazonaws.com/default/swc-open-house')
 
-    var $opener = $(`<a href="#${time}">${time}</div>`)
-      .on('click', getClickHandlerFor(time, openHouseDialog))
+  .then(function(times) {
 
-    $(this).empty().append($opener);
+    $('#open-house-timeslots td').each(function () {
+      var time = $(this).text();
+      var converted = convertTime(time);
+
+      if (times[converted] && times[converted] > 4) {
+        $(this).empty().append(`<span style="text-decoration: line-through;">${time}</span>`);
+      } else {
+        var $opener = $(`<a href="#${time}">${time}</a>`)
+          .on('click', getClickHandlerFor(time, openHouseDialog))
+  
+        $(this).empty().append($opener);
+      }
+    });
   });
+
 
   // ui-dialog-buttonpane ui-widget-content ui-helper-clearfix wp-block-buttons
   // ui-dialog-buttonset wp-block-button
