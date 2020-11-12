@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <!-- copy content of this file into wordpress theme's Additional CSS section-->
+  <link rel="stylesheet"
+    href="https://mortoneer.github.io/spotswood-wellness-center/open-house/styles/jquery-ui-scoped.css">
+</head>
+
+<body>
+  <!-- wp:paragraph -->
+  <p>During our Open House on December 5, 2020, we will have the following free courses. Space is very limited due to
+    COVID-19 restrictions.</p>
+  <!-- /wp:paragraph -->
+
+  <!-- wp:table {"className":"is-style-stripes"} -->
+  <figure id="open-house-courses" class="wp-block-table is-style-stripes">
+    <table>
+      <tbody>
+        <tr>
+          <td class="has-text-align-center" data-align="center">10:30am - 11am </td>
+          <td class="has-text-align-center" data-align="center">Cardio and Stretch</td>
+          <td>Register</td>
+        </tr>
+        <tr>
+          <td class="has-text-align-center" data-align="center">12:00pm - 12:30pm</td>
+          <td class="has-text-align-center" data-align="center">Health Workshop</td>
+          <td>Register</td>
+        </tr>
+        <tr>
+          <td class="has-text-align-center" data-align="center">1:00pm - 1:30pm</td>
+          <td class="has-text-align-center" data-align="center">Strong Bones</td>
+          <td>Register</td>
+        </tr>
+        <tr>
+          <td class="has-text-align-center" data-align="center">2:00pm - 2:30pm</td>
+          <td class="has-text-align-center" data-align="center">HIT</td>
+          <td>Register</td>
+        </tr>
+        <tr>
+          <td class="has-text-align-center" data-align="center">3:00pm - 3:30pm</td>
+          <td class="has-text-align-center" data-align="center">Full body Workout</td>
+          <td>Register</td>
+        </tr>
+      </tbody>
+    </table>
+  </figure>
+  <!-- /wp:table -->
+
+  <!-- wp:html -->
+  <div id="open-house-dialog" title="Open House Course Registration">
+
+    <p>
+      Date: December 5, 2020
+      <br>
+      Course: <span class="insert-time-for-form"></span>
+      <br>
+
+      <span class="open-house-warning ui-helper-hidden ui-icon-info"></span>
+      <span>All form fields are required.</span>
+    </p>
+
+    <form id="open-house-dialog-form">
+      <fieldset>
+        <input type="hidden" name="time" id="open-house-time" class="open-house-data">
+        <input type="hidden" name="type" value="course" id="open-house-type" class="open-house-data">
+        <input type="hidden" name="course" id="open-house-course" class="open-house-data">
+
+        <label for="name">Name</label>
+        <input type="text" name="name" id="open-house-name"
+          class="text ui-widget-content ui-corner-all open-house-data">
+
+        <label for="email">Email</label>
+        <input type="email" name="email" id="open-house-email"
+          class="text ui-widget-content ui-corner-all open-house-data">
+
+        <label for="phone">Phone Number</label>
+        <input type="text" name="phone" id="open-house-phone"
+          class="text ui-widget-content ui-corner-all open-house-data">
+
+        <label for="partySize">Number of People</label>
+        <input type="text" name="partySize" id="open-house-partySize" value="1"
+          class="text ui-widget-content ui-corner-all open-house-data">
+
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+      </fieldset>
+    </form>
+  </div>
+
+  <div id="open-house-registration-success" title="Registration Details">
+    <p id="open-house-registration-success-msg">You have registered successfully! We will see you at <span
+        class="insert-time-for-form"></span>.</p>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+    integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
+  <script src="https://mortoneer.github.io/spotswood-wellness-center/open-house/scripts/courses.js"></script>
+  <!-- /wp:html -->
+</body>
+
+</html>
