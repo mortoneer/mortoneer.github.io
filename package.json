@@ -1,0 +1,21 @@
+{
+  "name": "mortoneer.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "open-house-less": "npx less .\\spotswood-wellness-center\\open-house\\styles\\jquery-ui-scoped.less .\\spotswood-wellness-center\\open-house\\styles\\jquery-ui-scoped.css",
+    "open-house-minify": "npx minify .\\spotswood-wellness-center\\open-house\\styles\\jquery-ui-scoped.css > .\\spotswood-wellness-center\\open-house\\styles\\jquery-ui-scoped.min.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mortoneer/mortoneer.github.io.git"
+  },
+  "author": "enak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mortoneer/mortoneer.github.io/issues"
+  },
+  "homepage": "https://github.com/mortoneer/mortoneer.github.io#readme"
+}
