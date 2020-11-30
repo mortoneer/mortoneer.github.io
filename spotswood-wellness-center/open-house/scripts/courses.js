@@ -42,6 +42,12 @@ $(function () {
     course
   }) {
     console.log(`${name} registered for ${time}. ${email} - ${phone} - Party Size: ${partySize} - ${type}`);
+
+    gtag('event', 'open-house-course-submit', {
+      'send_to': 'UA-183714801-1',
+      'event_category' : 'engagement'
+    });
+    
     $.ajax({
       type: "POST",
       url: 'https://zy9kzkpff3.execute-api.us-east-1.amazonaws.com/default/swc-open-house',

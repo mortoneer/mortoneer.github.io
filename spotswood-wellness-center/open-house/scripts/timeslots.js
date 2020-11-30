@@ -40,6 +40,12 @@ $(function () {
     type
   }) {
     console.log(`${name} registered for ${time}. ${email} - ${phone} - Party Size: ${partySize} - ${type}`);
+
+    gtag('event', 'open-house-timeslot-submit', {
+      'send_to': 'UA-183714801-1',
+      'event_category' : 'engagement'
+    });
+
     $.ajax({
       type: "POST",
       url: 'https://zy9kzkpff3.execute-api.us-east-1.amazonaws.com/default/swc-open-house',
@@ -138,9 +144,4 @@ $(function () {
       }
     });
   });
-
-
-  // ui-dialog-buttonpane ui-widget-content ui-helper-clearfix wp-block-buttons
-  // ui-dialog-buttonset wp-block-button
-  // remove all ui-button ui-corner-all ui-widget
 });
