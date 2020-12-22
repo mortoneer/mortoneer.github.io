@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "open-house-less": "npx less .\\spotswood-wellness-center\\open-house\\styles\\jquery-ui-scoped.less .\\spotswood-wellness-center\\open-house\\styles\\jquery-ui-scoped.css",
-    "open-house-minify": "npx minify .\\spotswood-wellness-center\\open-house\\styles\\jquery-ui-scoped.css > .\\spotswood-wellness-center\\open-house\\styles\\jquery-ui-scoped.min.css"
+    "open-house-minify": "npx minify .\\spotswood-wellness-center\\open-house\\styles\\jquery-ui-scoped.css > .\\spotswood-wellness-center\\open-house\\styles\\jquery-ui-scoped.min.css",
+    "publish": "aws s3 sync . s3://mortoneer.com --acl public-read --exclude .git\\*"
   },
   "repository": {
     "type": "git",
