@@ -1,11 +1,13 @@
 jQuery(($) => {
-  var title = document.location.search.match(/title=([^&]+)?/)[1];
-  var url = document.location.search.match(/item=([^&]+)?/)[1];
+  var title = document.location.search.match(/title=([^&]+)?/);
+  var url = document.location.search.match(/item=([^&]+)?/);
+  title = title && title[1];
+  url = url && url[1];
 
   const ATTR_NAME = "data-mortoneer-form-load";
   function initializeForm(index, element) {
     const $form = $(element);
-    const formPath = $form.data(ATTR_NAME);
+    const formPath = $form.attr(ATTR_NAME);
 
     jQuery.get(formPath, 'html')
     .then((data) => {
