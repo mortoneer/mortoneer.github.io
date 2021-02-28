@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+  <title>Quote Request</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Quote Request</h1>
+
+    <form method="POST" action="https://j0gybkger4.execute-api.us-east-1.amazonaws.com/test/quote">
+
+      <div class="mb-3">
+        <label for="full-name" class="form-label">Full Name</label>
+        <input type="text" class="form-control" name="full-name" placeholder="John Smith">
+        <input type="hidden" name="label-full-name" value="Full Name" />
+      </div>
+
+      <div class="mb-3">
+        <label for="email-address" class="form-label">Email address</label>
+        <input type="email" class="form-control" name="email-address" placeholder="info@contfire.com">
+        <input type="hidden" name="label-email-address" value="Email address" />
+      </div>
+
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" name="title" placeholder="Captain">
+        <input type="hidden" name="label-title" value="Title" />
+      </div>
+
+      <div class="mb-3">
+        <label for="company" class="form-label">Company</label>
+        <input type="text" class="form-control" name="company" placeholder="Continental Fire &amp; Safety">
+        <input type="hidden" name="label-company" value="Company" />
+      </div>
+
+      <div class="mb-3">
+        <label for="phone-number" class="form-label">Phone Number</label>
+        <input type="text" class="form-control" name="phone-number" placeholder="609-588-0096">
+        <input type="hidden" name="label-phone-number" value="Phone Number" />
+      </div>
+
+      <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <input type="text" class="form-control" name="address" placeholder="2740 Kuser Road Hamilton, NJ 08691">
+        <input type="hidden" name="label-address" value="Address" />
+      </div>
+
+      <div class="mb-3">
+        <label for="item-list" class="form-label">Item List (one per line)</label>
+        <textarea class="form-control" name="item-list" id="item-list" rows="3"></textarea>
+        <input type="hidden" name="label-item-list" value="Item List" />
+      </div>
+
+      <div class="mb-3">
+        <label for="comment" class="form-label">Additional Comments</label>
+        <textarea class="form-control" name="comment" rows="3"></textarea>
+        <input type="hidden" name="label-comment" value="Additional Comments" />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+
+    </form>
+
+  </div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
