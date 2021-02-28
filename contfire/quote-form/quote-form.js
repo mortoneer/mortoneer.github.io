@@ -16,6 +16,9 @@ jQuery(($) => {
       if (title && url) {
         $form.find('#item-list').append(`${title} ${url}`)
       }
+
+      // theme style makes inputs wide
+      $form.addClass('form-vertical');
     });
   }
 
