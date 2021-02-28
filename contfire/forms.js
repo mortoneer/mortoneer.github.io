@@ -17,7 +17,7 @@ jQuery(($) => {
         $form.find('#item-list').append(`${title} ${url}`)
       }
 
-      // theme style makes inputs wide
+      // for Shopify: theme style makes inputs wide
       $form.addClass('form-vertical');
     });
   }

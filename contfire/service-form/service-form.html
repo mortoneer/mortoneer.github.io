@@ -1,0 +1,76 @@
+<form method="POST" action="https://j0gybkger4.execute-api.us-east-1.amazonaws.com/test/quote">
+  <input type="hidden" name="settings-form-type" value="service" />
+
+  <div class="mb-3">
+    <label for="full-name" class="form-label">Full Name</label>
+    <input type="text" class="form-control" name="full-name" placeholder="John Smith">
+    <input type="hidden" name="label-full-name" value="Full Name" />
+  </div>
+
+  <div class="mb-3">
+    <label for="email-address" class="form-label">Email address</label>
+    <input type="email" class="form-control" name="email-address" placeholder="info@contfire.com">
+    <input type="hidden" name="label-email-address" value="Email address" />
+  </div>
+
+  <div class="mb-3">
+    <label for="company" class="form-label">Company</label>
+    <input type="text" class="form-control" name="company" placeholder="Continental Fire &amp; Safety">
+    <input type="hidden" name="label-company" value="Company" />
+  </div>
+
+  <div class="mb-3">
+    <label for="phone-number" class="form-label">Phone Number</label>
+    <input type="text" class="form-control" name="phone-number" placeholder="609-588-0096">
+    <input type="hidden" name="label-phone-number" value="Phone Number" />
+  </div>
+
+  <div class="mb-3">
+    <label for="type-of-service" class="form-label">Type of Service</label>
+    <select class="form-select" aria-label="Type of Service" name="type-of-service">
+      <option selected>Open this select menu</option>
+      <option value="Cylinder Hydrotesting">Cylinder Hydrotesting</option>
+      <option value="Emergency Vehicle Service">Emergency Vehicle Service</option>
+      <option value="Emergency lighting /Up Fits">Emergency lighting /Up Fits</option>
+      <option value="Equipment mounting/Mounts">Equipment mounting/Mounts</option>
+      <option value="LED light upgrades">LED light upgrades</option>
+      <option value="Amkus Rescue tools">Amkus Rescue tools</option>
+      <option value="Gas Detection">Gas Detection</option>
+      <option value="Breathing Air Compressor">Breathing Air Compressor</option>
+      <option value="Honeywell SCBA">Honeywell SCBA</option>
+      <option value="Small engine">Small engine</option>
+      <option value="Streamlight Repair">Streamlight Repair</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Urgency of Service</label>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="urgency" id="urgency-emergency" value="Emergency">
+      <label class="form-check-label" for="urgency-emergency">
+        Emergency
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="urgency" id="urgency-one-week" value="Within One Week">
+      <label class="form-check-label" for="urgency-one-week">
+        Within One Week
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="urgency" id="urgency-two-weeks" value="Within 2-Weeks">
+      <label class="form-check-label" for="urgency-two-weeks">
+        Within 2-Weeks
+      </label>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="additional-details" class="form-label">Please describe type of service needed (include Make, Model, Serial number if available)</label>
+    <textarea class="form-control" name="additional-details" rows="3"></textarea>
+    <input type="hidden" name="label-additional-details" value="Additional Details" />
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
