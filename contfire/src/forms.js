@@ -3,6 +3,8 @@ jQuery(($) => {
   var url = document.location.search.match(/item=([^&]+)?/);
   title = title && title[1];
   url = url && url[1];
+  title = title && decodeURIComponent(title);
+  url = url && decodeURIComponent(url);
 
   const ATTR_NAME = "data-mortoneer-form-load";
   function initializeForm(index, element) {
