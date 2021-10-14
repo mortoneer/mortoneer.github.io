@@ -1,4 +1,4 @@
-/* Main Street Theatre Company - version 2.0.0 */
+/* Main Street Theatre Company - version 2.0.1 */
 
 img.image_user {
   max-width: 200px;
@@ -24,4 +24,14 @@ a[data-show] {
 
 #front_page_text {
   display: none;
+}
+
+/* Gift Certificates are cluttering up retail page. */
+table#TBL5662 > tbody > tr > td {
+  display: table-row;
+}
+
+.really-visible-link {
+  text-decoration: underline;
+  font-weight: bold;
 }

@@ -1,9 +1,5 @@
 if (jQuery) {
   jQuery(function($) {
-    // remove art-people's styles
-    //$('link[href*=arts-people]').remove();
-    $('link[href*=1620mainstreet_mk]').remove();
-
     // make the ticket buttons pretty
     $('a[data-show]').addClass('btn btn-primary')
 
@@ -13,10 +9,12 @@ if (jQuery) {
       .closest('table')
       .closest('td')
       .css('padding', '3em')
+      // this is bootstrap 4 but there is only bootstrap 3 loaded currently
       .addClass('w-25 p-4');
 
     // https://app.arts-people.com/index.php?retail=mnstr
     $('#TBLitems').addClass('table')
+
     // https://app.arts-people.com/index.php?membership=mnstr
     $('#membership_level_table').addClass('table')
 
