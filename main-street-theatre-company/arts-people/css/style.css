@@ -1,0 +1,319 @@
+/* Mainstreet Theater */
+/* Copied From https://ap-assets.s3-us-west-2.amazonaws.com/1620/1620mainstreet_mk.css */
+
+body {
+	background: #fff;
+	color: #000;
+	font-size: 13px;
+	font-family:Arial, Helvetica, sans-serif;
+	margin: 0px;
+}
+
+/*offsets the margin added to p tags so text is horizontally aligned across the page */
+p { margin-top: 0; }
+
+/* Styles the hr tag, often used between show descriptions on main ticketing page */
+hr {
+	border: 0;
+	width: 100%;
+	color: #000;
+	background-color: #000;
+	height: 1px;
+}
+#headercontianer{
+width:100%;
+Height:317px; }
+
+.logo{
+width:344px;
+height:317px;
+margin:auto; }
+
+.maincell {
+	padding: 10px;
+	min-height: 400px;
+}
+
+/* form { margin-bottom: 0px; } */
+
+/* -------------------- Links -------------------- */
+
+a {
+	color: rgb(0, 0, 255);
+	text-decoration: underline;
+}
+
+a:hover {
+	color: rgb(0, 0, 255);
+	text-decoration: none;
+}
+
+/* main ticketing front page buy tix links, retail page select item link, membership link */
+#Abuy_tickets, #Aitem_select, #mem_select a {
+    background: -webkit-gradient(linear,left top,left bottom,from(#7d9fde),to(#acccfb),to(#7d9fde));
+    background: -webkit-linear-gradient(top,#7d9fde,#acccfb,#7d9fde);
+    background: -moz-linear-gradient(top,#7d9fde,#acccfb,#7d9fde);
+    background: -ms-linear-gradient(top,#7d9fde,#acccfb,#7d9fde);
+    background: -o-linear-gradient(top,#7d9fde,#acccfb,#7d9fde);
+    background: linear-gradient(top,#7d9fde,#acccfb,#7d9fde);
+    border-radius: 20px;
+    color: #000;
+    padding: 10px;
+    text-decoration: none;
+    text-transform: none;
+    white-space: nowrap;
+}
+
+#Abuy_tickets:hover, #Aitem_select:hover, #mem_select a:hover {
+    background: -webkit-gradient(linear,left top,left bottom,from(#7d9fde),to(#fff),to(#7d9fde));
+    background: -webkit-linear-gradient(top,#7d9fde,#fff,#7d9fde);
+    background: -moz-linear-gradient(top,#7d9fde,#fff,#7d9fde);
+    background: -ms-linear-gradient(top,#7d9fde,#fff,#7d9fde);
+    background: -o-linear-gradient(top,#7d9fde,#fff,#7d9fde);
+    background: linear-gradient(top,#7d9fde,#fff,#7d9fde);
+    color: #000;
+    text-decoration: none;
+    transition: color 1s ease 0s;
+    -webkit-transition: color 1s ease 0s;
+}
+
+/* -------------------- Fonts -------------------- */
+.normal { 
+	font-size: 13px; 
+	color: #000000; 
+}
+
+.content { font-size: 13px; }
+
+h1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	color: rgb(0, 0, 255);
+	font-weight: bold;
+    text-decoration:underline;
+	margin-top: 0px;
+}
+
+h2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #000000;
+	font-weight: bold;
+	margin-top: 0px;
+}
+
+.emph {
+	color: #000000;
+	font-weight: bold;
+}
+
+.message {
+	font-size: 150%;
+	color: #000;
+	background-color: #84A5D8;
+	padding: 5px;
+}
+
+.error {
+	font-size: 150%;
+	color: white;
+	background-color: red;
+	padding: 5px;
+}
+
+/* ------------- Tables ------------- */
+#A176 {
+	font-weight:bold;
+}
+
+/* table for information sidebar on main ticketing page - this puts a line at left */
+#TBL180 {
+	width:200px;
+	border-left: 2px solid #000000;
+	padding-left: 5px;
+}
+
+/* table for login options - this puts a line between the 2 sides */
+#TBL2822 {
+	border-left: 2px solid #000000;
+	padding-left: 5px;
+}
+
+/* table for gift certificate sales - this puts a line at left, restricts width*/
+#TBL5776 {
+	border-left: 2px solid #000000;
+	width: 250px;
+	padding-left: 5px;
+}
+
+/* table for information sidebar on preseason page */
+#TBL3681 {
+	width:200px;
+	border-left: 2px solid #000000;
+}
+
+/*Gift Certificate column */
+#TBL5776 td { min-width: 160px; }
+
+/* formats header for the class registration (class list) page and email table on cust login pg */
+.table-bordered {
+	border:1px solid #000000;
+}
+
+/* sets the asterisk color to white - is necessary if the table-bordered th color is dark */
+/*.table-bordered .required_asterisk { color: #fff; font-size: 18px; }*/
+
+/* This affects tables, like the email table on the Customer Info page, and the "Receive Updates" column header text in that table */
+.table-bordered th {
+	padding: 3px 5px;
+	background-color: #84A5D8;
+	color: #000;
+	font-size: 15px;
+}
+
+/* Font used for Print ticket link on the last page of the buy path */
+.table-bordered a {
+	font-size: 14px;
+}
+
+/* formats membership listing table and renewal table on membership page */
+#mem_amount { text-align: center;}
+
+/* this adds a dollar sign in front of the membership prices */
+#mem_amount:before {
+	content: "$"; }
+
+/* this removes the dollar sign from areas where it should not be displayed */
+th:before { content: none !important; }
+
+/* Formats the select membership link on the membership public page. Usually doesn't have to be adjusted */
+#mem_select { vertical-align: top; font-weight:bold;}
+#mem_select a{ text-decoration: underline;}
+#mem_select a:hover { text-decoration: none;}
+
+/*This formats the Membership List table on the membership PP */
+#membership_level_table { border:1px solid #000000; }
+
+#membership_level_table th {
+	background-color: #84A5D8;
+	color: #000;
+	font-size: 15px;  
+	padding: 0px 5px; 
+}
+
+#membership_level_table td { padding: 5px 3px; }
+
+/* This formats the Membership Renewal table (not to be confused with the List of Memberships table) */
+#membership_table { 
+	padding-bottom: 10px;
+	border-bottom: 1px dashed #333;
+	box-shadow: inset 0 -1px 0 0 #333, 0 1px 0 0 #333;
+	margin-bottom: 10px;
+}
+
+#membership_table th {
+	vertical-align: top;
+	background-color: #84A5D8;
+	color: #000;
+	padding: 5px 8px 5px 10px;
+}
+	
+#membership_table td { 
+	padding:0px 5px; 
+	font-weight: bold; 
+	color: #000000; 
+}
+	
+/* subscription - select series page */
+.subscription_series_name { font-weight: bold; }
+
+
+/* HTABLE (data grid) column headers) */
+.htable {
+	border:1px solid #000000;
+}
+
+.headtext {
+	font-size: 15px;
+	font-weight: bold;
+	color: white;
+}
+
+.htable th {
+	padding: 0 5px;
+	vertical-align:middle;
+	background-color: #84A5D8;
+	color: #000;
+	font-size: 15px; 
+}
+
+.htable td {
+	padding: 1px 5px 2px;
+	vertical-align:middle;
+	color: #000000;
+}
+
+/* -------------------- Formats images on main ticketing and select a date pages -------------------- */
+img {border: 0px}
+
+.show_image_div img { max-width:250px; padding-right: 5px; }
+
+#TBL2885 img { max-width:250px; padding-right: 5px; }
+
+
+/* Generally have things go to the top of their cells instead of 
+	floating in the middle, which tends to be the default otherwise */
+
+td {
+	vertical-align: top;
+}
+
+.page_public {
+	width: 100%;
+}
+
+/* ---------- stagelabel class for use in the large label of "STAGE" on seating charts --------- */
+.stagelabel {
+	background-color: #84A5D8;
+	color: #000;
+	font-size:24px;
+	vertical-align: middle;
+	text-align:center;
+}
+
+/* ---------- table class for use in the large label of "table #" on dining table format seating charts --------- */
+.table {
+	background-color: #84A5D8;
+	color: #000;
+	font-size:10px;
+	vertical-align: middle;
+	text-align:center;
+}
+
+/* ---------- this label changes how the row labels, etc display on seating charts --------- */
+.seat_label_td {
+	color: #000000;
+	font-size: 10px;
+	vertical-align:middle;
+	text-align:center;
+}
+
+/* ------ FOOTER SECTION ------*/
+.footer {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 1.3;
+	text-align: center;
+	color: #000000;
+	padding: 15px 0;
+}
+
+.footer a { 
+	color:#000000;
+	text-decoration: none;
+}
+
+.footer a:hover { 
+	color:#000000;
+	text-decoration: underline;
+}
