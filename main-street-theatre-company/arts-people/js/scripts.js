@@ -1,7 +1,12 @@
 if (jQuery) {
   jQuery(function($) {
     // make the ticket buttons pretty
-    $('a[data-show]').addClass('btn btn-primary')
+    $('a[data-show]').addClass('btn btn-primary');
+
+    // why do we show that?
+    if ($('.sold-out-remove-add-to-cart').length) {
+      $('#BTNitem_add').closest('tr').parent().closest('tr').parent().closest('td').remove();
+    }
 
     // make the coupon form pretty
     $('#TXTcoupon_intro')
