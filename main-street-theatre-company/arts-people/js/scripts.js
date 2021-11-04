@@ -8,6 +8,10 @@ if (jQuery) {
       $('#BTNitem_add').closest('tr').parent().closest('tr').parent().closest('td').remove();
     }
 
+    // why is there an empty row taking up space?
+    // have you heard of css?
+    $('.htable_front_page .show_image_div:first ').closest('tr').remove()
+
     // make the coupon form pretty
     $('#TXTcoupon_intro')
       .closest('table').parent()
