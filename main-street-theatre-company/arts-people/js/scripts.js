@@ -4,7 +4,7 @@ if (jQuery) {
     $('a[data-show]').addClass('btn btn-primary');
 
     // why do we show that?
-    if ($('.sold-out-remove-add-to-cart').length) {
+    if (jQuery('main strong:contains("sold out")').length) {
       $('#BTNitem_add').closest('tr').parent().closest('tr').parent().closest('td').remove();
     }
 
