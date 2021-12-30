@@ -27,6 +27,15 @@ if (jQuery) {
     // https://app.arts-people.com/index.php?membership=mnstr
     $('#membership_level_table').addClass('table')
 
+    // Take over the "Retail" page for the Academy.
+    const $retailHeading = $('h1:contains(Welcome to our online store.)');
+    const academyNotStarted = Date.now() < new Date('Feb 15 2022').getTime();
+    if (academyNotStarted && $retailHeading.length) {
+      $retailHeading
+      .text("Main Street Academy - Payment Center")
+      .after('<p>Please start by reviewing the <a href="https://www.mainstreettheatrecompany.org/main-street-academy">Main Street Academy page</a> and fill out the form if you have not done so already.</p>');
+    }
+    
     const ATTR_NAME = "data-mortoneer-html-load";
     function loadHtml(index, element) {
       const $form = $(element);
