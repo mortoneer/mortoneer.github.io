@@ -33,7 +33,12 @@ if (jQuery) {
     if (academyNotStarted && $retailHeading.length) {
       $retailHeading
       .text("Main Street Academy - Payment Center")
-      .after('<p>Please start by reviewing the <a href="https://www.mainstreettheatrecompany.org/main-street-academy">Main Street Academy page</a> and fill out the form if you have not done so already.</p>');
+      .after(`<p>Please start by reviewing the 
+      <a href="https://www.mainstreettheatrecompany.org/main-street-academy">Main Street Academy page</a>
+       and fill out the <a href="https://docs.google.com/forms/d/e/1FAIpQLScnJYxaupZtM5BzvCt7UWLHaaCMXZtyILsOrqo6pMjSd_pVrA/viewform">form</a> 
+       if you have not done so already.</p>`);
+
+      $('title').text('Main Street Academy - Payment Center');
     }
     
     const ATTR_NAME = "data-mortoneer-html-load";
