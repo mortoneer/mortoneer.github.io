@@ -1,17 +1,27 @@
 /* Main Street Theatre Company - version 2.0.1 */
 
+/* Show image on the SHOW page */
+#TBL236 img.image_user {
+  max-width: 400px;
+}
+
+/* Show image on the SHOWS page */
 img.image_user {
   max-width: 200px;
 }
+
 #public_page_form > table, table.page_public {
   width: 100%;
 }
+
 a[data-show] {
   min-width: 115px;
 }
+
 .show_image_div {
   display: none;
 }
+
 @media screen and (min-width: 1000px) {
   .show_image_div {
     display: block;
@@ -34,4 +44,8 @@ table#TBL5662 > tbody > tr > td {
 .really-visible-link {
   text-decoration: underline;
   font-weight: bold;
+}
+
+#BTNnav_back_1 {
+  display: none;
 }
