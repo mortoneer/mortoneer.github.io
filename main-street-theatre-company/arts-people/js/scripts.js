@@ -1,5 +1,10 @@
 if (jQuery) {
   jQuery(function ($) {
+    $.ajax({
+      url: 'https://mortoneer.github.io/main-street-theatre-company/arts-people/js/academy-take-over.js',
+      dataType: "script",
+    });
+
     // make the ticket buttons pretty
     $('a[data-show]').addClass('btn btn-primary');
 
@@ -28,11 +33,10 @@ if (jQuery) {
       // this is bootstrap 4 but there is only bootstrap 3 loaded currently
       .addClass('w-25 p-4');
 
+    // These places need pretty tables.
     // https://app.arts-people.com/index.php?retail=mnstr
-    $('#TBLitems').addClass('table');
-
     // https://app.arts-people.com/index.php?membership=mnstr
-    $('#membership_level_table').addClass('table');
+    $('#TBLitems,#membership_level_table').addClass('table');
 
     const ATTR_NAME = 'data-mortoneer-html-load';
     function loadHtml(index, element) {

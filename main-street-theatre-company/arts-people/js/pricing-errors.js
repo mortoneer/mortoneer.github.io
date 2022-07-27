@@ -1,3 +1,9 @@
+/**
+ * Stupidly adding comments after the fact. I think I was trying to limit the number of tickets that can be purchased per parent for the academy showcase.
+ * There was no good way using the ticketing system to limit ticket count per order. All I could do is make it result in a pricing error where only the 
+ * first 4 tickets had a price and the remaining tickets would error out. This code was trying to preempt the error.
+ */
+
 const storageKey = 'academyStore';
 async function digestMessage(message) {
   const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
