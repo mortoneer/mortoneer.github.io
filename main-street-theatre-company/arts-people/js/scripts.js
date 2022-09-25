@@ -1,10 +1,5 @@
 if (jQuery) {
   jQuery(function ($) {
-    $.ajax({
-      url: 'https://mortoneer.github.io/main-street-theatre-company/arts-people/js/academy-take-over.js',
-      dataType: "script",
-    });
-
     // make the ticket buttons pretty
     $('a[data-show]').addClass('btn btn-primary');
 
