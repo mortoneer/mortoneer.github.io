@@ -55,3 +55,12 @@ if (jQuery) {
     // }
   });
 }
+
+try {
+  if (window.location.href.indexOf('retail=mnstr') !== -1) {
+    document.title = 'Sales | Main Street Theatre Company';
+  }
+}
+catch(err) {
+  console.error('unable to change location')
+}
