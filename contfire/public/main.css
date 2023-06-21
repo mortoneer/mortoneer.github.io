@@ -1,0 +1,61 @@
+#athletix-banner {
+  padding-top: 40px;
+  text-align: center;
+}
+#athletix-banner p.sm {
+  text-align: center;
+}
+#athletix-banner p.md {
+  display: none;
+  max-width: 400px;
+}
+@media only screen and (min-width: 749px) {
+  #athletix-banner {
+    height: 455px;
+    padding-left: 40px;
+    text-align: left;
+    background-image: url("//cdn.shopify.com/s/files/1/0049/3132/1890/collections/athletix-lp-banner_1080x.png?v=1581293563");
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: 90%;
+  }
+  #athletix-banner p.sm {
+    display: none;
+  }
+  #athletix-banner p.md {
+    display: block;
+  }
+}
+@media only screen and (min-width: 749px) and (max-width: 1000px) {
+  #athletix-banner {
+    background-size: 60%;
+  }
+}
+@media only screen and (min-width: 1000px) {
+  #athletix-banner {
+    background-size: 65%;
+    height: 450px;
+  }
+  #athletix-banner p.md {
+    max-width: 32%;
+  }
+}
+#athletix-banner #link-to-globe {
+  background-color: transparent;
+}
+#amkus-description .icon {
+  display: none;
+}
+#amkus-description .btn {
+  margin: 3px;
+}
+#amkus-description hr {
+  display: none;
+}
+#shopify-section-1584728420899 {
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+.product-description-box {
+  padding: 1em;
+}
