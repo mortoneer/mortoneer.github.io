@@ -53,6 +53,25 @@ if (jQuery) {
     //   // ticketing param resets the cookie (maybe), so cart goes missing
     //   history.pushState('https://app.arts-people.com/index.php?ticketing=mnstr');
     // }
+
+    // grab the preseason and add it to the main season
+    // you cannot buy tickets cross-season, so if you have a cart link (items in your cart), it will NOT grab the preseason
+    if (jQuery('.page_public.tt-page-160').length && !jQuery('#link-cart').length) {
+      jQuery.get('https://app.arts-people.com/index.php?preseason=mnstr', 'html').then(data => {
+        const $preseason = jQuery(data).find('.htable_front_page tbody');
+        $preseason.find('a').addClass('btn btn-primary').prop('data-show-link', '1').prop('show-data', );
+        const $preseasonRows = $('tr', $preseason);
+        jQuery('td > .normal#TXTdescription', $preseason).wrap('<div class="show_text_div">');
+        jQuery('.htable_front_page tbody').append($preseasonRows);
+      });
+    }
+
+    if ($('.page_public.tt-page-3679').length) {
+      // this is the preseason page
+      jQuery('td > .normal#TXTdescription').wrap('<div class="show_text_div">');
+      jQuery('a:contains("Buy Tickets")').addClass('btn btn-primary');
+    }
+
   });
 }
 
