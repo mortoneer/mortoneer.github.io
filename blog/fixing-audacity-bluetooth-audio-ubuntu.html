@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="How to fix Audacity not playing audio through Bluetooth speakers on Ubuntu Linux by configuring ALSA to route through PulseAudio">
+    <meta name="keywords" content="Audacity, Bluetooth, Ubuntu, Linux, audio, ALSA, PulseAudio, troubleshooting">
+    <title>Fixing Audacity Bluetooth Audio Issues on Ubuntu Linux</title>
+</head>
+<body>
+    <article>
+        <header>
+            <h1>Fixing Audacity Bluetooth Audio Issues on Ubuntu Linux</h1>
+            <p><time datetime="2025-07-04">July 4, 2025</time></p>
+        </header>
+
+        <section>
+            <h2>The Problem</h2>
+            <p>After connecting a Bluetooth speaker to Ubuntu and switching from PipeWire to PulseAudio, I encountered a frustrating issue: while system sounds, web browsers, and VLC could play audio through the Bluetooth speaker perfectly, <strong>Audacity remained completely silent</strong>.</p>
+            
+            <p>The symptoms were clear:</p>
+            <ul>
+                <li>✅ <code>paplay</code> command worked flawlessly</li>
+                <li>✅ Web browsers played audio through Bluetooth</li>
+                <li>✅ VLC media player worked correctly</li>
+                <li>❌ Audacity produced no sound whatsoever</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Initial Troubleshooting</h2>
+            <p>The first step was to verify the Bluetooth connection and audio system configuration:</p>
+            
+            <pre><code># Check Bluetooth connection
+bluetoothctl info F4:4E:FD:30:E5:04
+
+# Verify PulseAudio sinks
+pactl list sinks short
+
+# Test audio playback
+paplay /usr/share/sounds/sound-icons/cembalo-6.wav</code></pre>
+
+            <p>Everything appeared to be working correctly at the system level. The Bluetooth speaker was connected, PulseAudio recognized it, and direct audio playback worked perfectly.</p>
+        </section>
+
+        <section>
+            <h2>Investigating Audacity's Audio Configuration</h2>
+            <p>Audacity's audio preferences revealed the core issue. In <strong>Edit → Preferences → Audio I/O</strong>, the configuration showed:</p>
+            
+            <ul>
+                <li><strong>Host:</strong> ALSA (only option available)</li>
+                <li><strong>Playback Device:</strong> pulse</li>
+            </ul>
+
+            <p>This configuration should theoretically work, but there was a critical missing piece in the audio routing chain.</p>
+        </section>
+
+        <section>
+            <h2>Understanding the Audio Architecture</h2>
+            <p>Modern Linux audio systems involve multiple layers:</p>
+            
+            <ol>
+                <li><strong>Hardware Layer:</strong> Bluetooth speaker</li>
+                <li><strong>Audio Server:</strong> PulseAudio (manages audio routing)</li>
+                <li><strong>Audio API:</strong> ALSA (low-level audio interface)</li>
+                <li><strong>Application:</strong> Audacity</li>
+            </ol>
+
+            <p>The problem was that Audacity uses ALSA as its audio host, but ALSA didn't know how to properly communicate with PulseAudio to route audio to the Bluetooth device.</p>
+        </section>
+
+        <section>
+            <h2>Why This Happened</h2>
+            <p>Several factors contributed to this issue:</p>
+            
+            <h3>1. Audio System Migration</h3>
+            <p>Ubuntu 24.04 ships with PipeWire by default, but we had switched to PulseAudio. This transition can leave configuration gaps between different audio layers.</p>
+
+            <h3>2. Missing ALSA Configuration</h3>
+            <p>ALSA requires explicit configuration to route audio through PulseAudio. Without this configuration, ALSA applications like Audacity cannot access PulseAudio-managed devices.</p>
+
+            <h3>3. Application-Specific Audio APIs</h3>
+            <p>Different applications use different audio APIs:</p>
+            <ul>
+                <li><strong>Web browsers:</strong> Use PulseAudio directly</li>
+                <li><strong>VLC:</strong> Can use multiple backends, automatically detects PulseAudio</li>
+                <li><strong>Audacity:</strong> Primarily uses ALSA, requires proper ALSA-to-PulseAudio bridging</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>The Solution</h2>
+            <p>The fix involved creating an ALSA configuration file that bridges ALSA to PulseAudio:</p>
+
+            <pre><code># Create ~/.asoundrc file
+cat > ~/.asoundrc << 'EOF'
+pcm.!default {
+    type pulse
+}
+ctl.!default {
+    type pulse
+}
+EOF</code></pre>
+
+            <h3>What This Configuration Does</h3>
+            <dl>
+                <dt><code>pcm.!default</code></dt>
+                <dd>Defines the default PCM (audio playback) device to use PulseAudio</dd>
+                
+                <dt><code>ctl.!default</code></dt>
+                <dd>Defines the default control interface to use PulseAudio</dd>
+                
+                <dt><code>type pulse</code></dt>
+                <dd>Specifies that both interfaces should route through PulseAudio</dd>
+            </dl>
+        </section>
+
+        <section>
+            <h2>Verification</h2>
+            <p>After creating the configuration file, we could verify the fix:</p>
+
+            <pre><code># Test ALSA routing through PulseAudio
+aplay -D pulse /usr/share/sounds/sound-icons/cembalo-6.wav
+
+# Restart Audacity and test playback</code></pre>
+
+            <p>The audio now flowed correctly: <strong>Audacity → ALSA → PulseAudio → Bluetooth Speaker</strong></p>
+        </section>
+
+        <section>
+            <h2>Alternative Solutions</h2>
+            <p>If the <code>.asoundrc</code> approach doesn't work, consider these alternatives:</p>
+
+            <h3>1. System-wide Configuration</h3>
+            <p>Create <code>/etc/asound.conf</code> instead of <code>~/.asoundrc</code> for system-wide effect.</p>
+
+            <h3>2. Install PulseAudio Development Libraries</h3>
+            <pre><code>sudo apt install libpulse-dev portaudio19-dev</code></pre>
+            <p>This might enable native PulseAudio support in some applications.</p>
+
+            <h3>3. Use JACK Audio</h3>
+            <p>For professional audio work, consider using JACK with PulseAudio bridging:</p>
+            <pre><code>sudo apt install jackd2 pulseaudio-module-jack</code></pre>
+        </section>
+
+        <section>
+            <h2>Prevention</h2>
+            <p>To avoid similar issues in the future:</p>
+            
+            <ul>
+                <li><strong>Maintain consistent audio configuration</strong> when switching between audio systems</li>
+                <li><strong>Test audio applications</strong> after system audio changes</li>
+                <li><strong>Keep ALSA configuration files</strong> updated when using PulseAudio</li>
+                <li><strong>Document your audio setup</strong> for future reference</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Conclusion</h2>
+            <p>This issue highlights the complexity of Linux audio systems and the importance of proper configuration bridging between different audio layers. The solution—a simple two-line ALSA configuration file—demonstrates how small configuration gaps can cause significant functionality issues.</p>
+            
+            <p>The key lesson is understanding that different applications may use different audio APIs, and ensuring these APIs can properly communicate with your chosen audio server is crucial for a seamless audio experience.</p>
+        </section>
+
+        <footer>
+            <p><small>Tags: <a href="#" rel="tag">Linux</a>, <a href="#" rel="tag">Ubuntu</a>, <a href="#" rel="tag">Audacity</a>, <a href="#" rel="tag">Bluetooth</a>, <a href="#" rel="tag">Audio</a>, <a href="#" rel="tag">ALSA</a>, <a href="#" rel="tag">PulseAudio</a></small></p>
+        </footer>
+    </article>
+</body>
+</html>
