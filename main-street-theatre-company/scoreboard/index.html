@@ -175,6 +175,65 @@
         
         #btn-next:active { transform: translateY(2px); }
 
+        /* --- NEW STYLES FOR VISUAL MODES --- */
+
+        /* MODE 0: Standard Game */
+        .visual-summary.mode-0 {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #222;
+        }
+
+        /* MODE 1: Fireworks / Victory */
+        .visual-summary.mode-1 {
+            background: linear-gradient(135deg, #2c3e50, #c0392b);
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            border: 2px solid #e74c3c;
+            animation: pulse 2s infinite;
+        }
+        .victory-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px #f1c40f;
+            margin-bottom: 5px;
+        }
+
+        /* MODE 2: Clock Only */
+        .visual-summary.mode-2 {
+            background: #000;
+            justify-content: center;
+            align-items: center;
+        }
+        .visual-summary.mode-2 .clock-val {
+            font-size: 2.5rem; /* Huge clock */
+            border: none;
+            color: #fff;
+        }
+
+        /* MODE 4: OFF / Power Outage */
+        .visual-summary.mode-4 {
+            background: #000;
+            justify-content: center;
+            align-items: center;
+            border: 1px dashed #444;
+        }
+        .offline-text {
+            color: #333;
+            font-family: monospace;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+
     </style>
 </head>
 <body>
@@ -261,18 +320,67 @@
     const container = document.getElementById('scene-container');
 
     // --- 2. INITIALIZATION ---
+// --- 2. INITIALIZATION ---
     function init() {
         scenes.forEach((scene, index) => {
             const el = document.createElement('div');
             el.className = `scene-card mode-${scene.data.mode}`;
             el.id = `scene-${index}`;
             
-            // Format time for visual display
+            // Format time 
             const timeStr = `${scene.data.clockMinutes}:${scene.data.clockSeconds.toString().padStart(2, '0')}`;
             
-            // Get Mode Name for UI
+            // Get Mode Name for UI Label
             const modeName = Object.keys(ScoreboardMode).find(key => ScoreboardMode[key] === scene.data.mode);
 
+            // --- GENERATE DIFFERENT HTML BASED ON MODE ---
+            let visualHtml = '';
+
+            switch (scene.data.mode) {
+                case 4: // OFF
+                    visualHtml = `
+                        <div class="visual-summary mode-4">
+                            <div class="offline-text">/// SYSTEM OFFLINE ///</div>
+                        </div>`;
+                    break;
+
+                case 1: // FIREWORKS / VICTORY
+                    visualHtml = `
+                        <div class="visual-summary mode-1">
+                            <div class="victory-text">🎉 WILDCATS WIN! 🎉</div>
+                            <div style="color:white; font-size:1.2rem;">${scene.data.homeScore} - ${scene.data.awayScore}</div>
+                        </div>`;
+                    break;
+
+                case 2: // CLOCK ONLY
+                    visualHtml = `
+                        <div class="visual-summary mode-2">
+                            <div class="clock-val">${timeStr}</div>
+                        </div>`;
+                    break;
+
+                case 3: // COUNTDOWN (Skipping per instructions, using default game view)
+                case 0: // BASKETBALL GAME (Default)
+                default:
+                    visualHtml = `
+                        <div class="visual-summary mode-0">
+                            <div class="score-box">
+                                <div style="font-size:0.7rem; color:#888;">HOME</div>
+                                <div class="score-val" style="color:#ffcc00">${scene.data.homeScore}</div>
+                            </div>
+                            <div style="text-align:center">
+                                <div class="clock-val">${timeStr}</div>
+                                <div style="font-size:0.7rem; color:#666; margin-top:2px;">Q${scene.data.quarter}</div>
+                            </div>
+                            <div class="score-box">
+                                <div style="font-size:0.7rem; color:#888;">AWAY</div>
+                                <div class="score-val" style="color:#ff4444">${scene.data.awayScore}</div>
+                            </div>
+                        </div>`;
+                    break;
+            }
+
+            // Inject the HTML
             el.innerHTML = `
                 <div class="scene-header">
                     <span>CUE #${index + 1}: ${scene.description}</span>
@@ -280,17 +388,7 @@
                 </div>
                 <div class="data-display">
                     <pre class="json-block">${JSON.stringify(scene.data, null, 2)}</pre>
-                    <div class="visual-summary">
-                        <div class="score-box">
-                            <div>HOME</div>
-                            <div class="score-val" style="color:#ffcc00">${scene.data.homeScore}</div>
-                        </div>
-                        <div class="clock-val">${timeStr}</div>
-                        <div class="score-box">
-                            <div>AWAY</div>
-                            <div class="score-val" style="color:#ff4444">${scene.data.awayScore}</div>
-                        </div>
-                    </div>
+                    ${visualHtml}
                 </div>
             `;
             container.appendChild(el);
