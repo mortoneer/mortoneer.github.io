@@ -48,6 +48,16 @@
             border-radius: 6px;
         }
 
+        .device-select {
+            background-color: var(--accent-color);
+            color: #000;
+            font-weight: bold;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
         input {
             background: var(--input-bg);
             border: 1px solid #666;
@@ -55,6 +65,8 @@
             padding: 8px;
             font-family: inherit;
             border-radius: 4px;
+            width: 140px;
+            font-size: 0.85rem;
         }
 
         .btn-conn {
@@ -156,7 +168,7 @@
             padding: 5px;
             z-index: 2000;
             font-family: monospace;
-            display: flex; flex-direction: column-reverse; /* Newest at bottom visually */
+            display: flex; flex-direction: column-reverse; 
         }
 
         @keyframes pulse {
@@ -173,8 +185,15 @@
     
     <div class="connection-panel">
         <span id="connection-status" class="status-dot"></span>
-        <label>MAC: <input type="text" id="macAddressInput" value="FF:FF:FF:FF:FF:FF" size="18"></label>
-        <label>Event: <input type="text" id="eventTypeInput" value="1" size="2"></label>
+        
+        <select id="targetDevice" class="device-select" onchange="updateTargetDevice()">
+            <option value="scoreboard">Main Scoreboard</option>
+            <option value="onAirSign">On Air Sign</option>
+        </select>
+
+        <label>MAC: <input type="text" id="macAddressInput" readonly></label>
+        <label>Event: <input type="text" id="eventTypeInput" readonly></label>
+        
         <button id="btnConnect" class="btn-conn btn-connect" onclick="connectSerial()">Connect Serial</button>
         <button id="btnDisconnect" class="btn-conn btn-disconnect" onclick="disconnectSerial()">Disconnect</button>
     </div>
@@ -211,6 +230,7 @@
         {"description": "OFF", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":14},
         {"description": "15. Act 2 Scene 4 - Game Board Reset", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":1,"clockMinutes":8,"clockSeconds":0,"mode":0,"clockRunning":false},"index":15},
         {"description": "OFF", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":16},
+
         // GAME
         { description: "Start: Tip Off", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":1,"clockMinutes":8,"clockSeconds":0,"mode": 0,"clockRunning":true} },
         { description: "End Q1: Wildcats Lead", data: {"homeScore":18,"awayScore":14,"homeFouls":1,"awayFouls":2,"quarter":2,"clockMinutes":8,"clockSeconds":0,"mode": 0,"clockRunning":true} },
@@ -234,7 +254,23 @@
         { description: "VICTORY CELEBRATION", data: {"homeScore":77,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":0,"mode": 1,"clockRunning":false} },
     ];
 
-    // --- 2. SERIAL PORT VARIABLES ---
+    // --- 2. DEVICE SELECTION LOGIC ---
+    function updateTargetDevice() {
+        const targetId = document.getElementById('targetDevice').value;
+        const macInput = document.getElementById('macAddressInput');
+        const evtInput = document.getElementById('eventTypeInput');
+
+        if (targetId === 'onAirSign') {
+            macInput.value = '8c:4f:00:3c:dd:2c';
+            evtInput.value = 'ON_AIR_SIGN';
+        } else {
+            // Default: Scoreboard
+            macInput.value = '94:51:dc:32:a3:b0';
+            evtInput.value = 'SCOREBOARD';
+        }
+    }
+
+    // --- 3. SERIAL PORT VARIABLES ---
     let port;
     let reader;
     let writer;
@@ -242,7 +278,7 @@
     const MAX_LOG_LINES = 50;
     let lineBuffer = '';
 
-    // --- 3. SERIAL LOGIC ---
+    // --- 4. SERIAL LOGIC ---
 
     async function connectSerial() {
         if (!('serial' in navigator)) {
@@ -360,7 +396,7 @@
         }
     }
 
-    // --- 4. SCENE CONTROLLER LOGIC ---
+    // --- 5. SCENE CONTROLLER LOGIC ---
     let currentIndex = -1;
     const container = document.getElementById('scene-container');
 
@@ -401,6 +437,7 @@
         });
         
         // Initial UI State
+        updateTargetDevice(); // Set initial MAC/Event values
         updateConnectionUI(false);
     }
 
@@ -428,7 +465,7 @@
         else if (e.code === "ArrowLeft") { prevScene(); }
     });
 
-    // --- 5. TRIGGER LOGIC ---
+    // --- 6. TRIGGER LOGIC ---
     function onSceneChange(newScene) {
         // Construct the JSON payload for the scoreboard
         const jsonPayload = JSON.stringify({ scene: newScene, index: -1 });
