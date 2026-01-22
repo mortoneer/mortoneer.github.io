@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSM Scene 10 Sequencer</title>
+    <title>HSM Scene Sequencer</title>
     <style>
         :root {
             --bg-color: #1a1a1a;
@@ -180,7 +180,7 @@
 <body>
 
 <header>
-    <h1>HSM Scene 10 Controller</h1>
+    <h1>HSM Scene Controller</h1>
     <div class="sub-header">Keys: Space/Right (Next) | Left (Prev)</div>
 </header>
 
@@ -206,6 +206,23 @@
     
     // Scene Data
     const scenes = [
+        { description: "Show Start. OFF", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":0},
+        { description: "New Years Count Down", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":10,"mode":2,"clockRunning":false},"index":1},
+        { description: "NINE", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":9,"mode":2,"clockRunning":false},"index":2},
+        { description: "EIGHT", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":8,"mode":2,"clockRunning":false},"index":3},
+        { description: "SEVEN", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":7,"mode":2,"clockRunning":false},"index":4},
+        { description: "SIX", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":6,"mode":2,"clockRunning":false},"index":5},
+        { description: "FIVE", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":5,"mode":2,"clockRunning":false},"index":6},
+        { description: "FOUR", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":4,"mode":2,"clockRunning":false},"index":7},
+        { description: "THREE", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":3,"mode":2,"clockRunning":false},"index":8},
+        { description: "TWO", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":2,"mode":2,"clockRunning":false},"index":9},
+        { description: "ONE", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":1,"mode":2,"clockRunning":false},"index":10},
+        { description: "Fireworks", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":1,"clockRunning":false},"index":11},
+        { description: "Off", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":12},
+        { description: "13. Act 1 Scene 4 - Get Your Head In The Game - 2:30 minutes at practice", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":2,"clockSeconds":30,"mode":2,"clockRunning":true},"index":13},
+        { description: "OFF", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":14},
+        { description: "15. Act 2 Scene 4 - Game Board Reset", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":1,"clockMinutes":8,"clockSeconds":0,"mode":0,"clockRunning":false},"index":15},
+        { description: "OFF", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":16},
         // --- INTRO / BUILD UP ---
         { description: "Start: Tip Off", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":1,"clockMinutes":8,"clockSeconds":0,"mode": 0,"clockRunning":true} },
         
