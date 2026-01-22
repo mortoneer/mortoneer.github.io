@@ -11,6 +11,8 @@
             --text-color: #e0e0e0;
             --accent-color: #ffcc00; /* Wildcats Gold */
             --highlight-color: #2ecc71; /* Active Green */
+            --off-color: #000000;
+            --fireworks-color: #e74c3c;
         }
 
         body {
@@ -18,7 +20,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding-bottom: 100px; /* Space for fixed footer */
+            padding-bottom: 120px; /* Space for fixed footer */
         }
 
         header {
@@ -32,6 +34,7 @@
         }
 
         h1 { margin: 0; font-size: 1.5rem; }
+        .sub-header { font-size: 0.8rem; color: #888; margin-top: 5px; }
 
         #scene-container {
             max-width: 800px;
@@ -62,6 +65,18 @@
             background-color: #383838;
         }
 
+        /* Specific styles for special modes */
+        .scene-card.mode-4.active { /* OFF */
+            border-left-color: #555;
+            background-color: #000;
+            box-shadow: none;
+        }
+        
+        .scene-card.mode-1.active { /* FIREWORKS */
+            border-left-color: var(--fireworks-color);
+            box-shadow: 0 0 30px rgba(231, 76, 60, 0.4);
+        }
+
         .scene-card.active::after {
             content: "CURRENT CUE";
             position: absolute;
@@ -81,6 +96,16 @@
             border-bottom: 1px solid #444;
             padding-bottom: 5px;
             margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .mode-badge {
+            font-size: 0.7rem;
+            background: #444;
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 3px;
         }
 
         .data-display {
@@ -97,6 +122,7 @@
             font-size: 0.85rem;
             overflow-x: auto;
             min-width: 250px;
+            border: 1px solid #333;
         }
 
         .visual-summary {
@@ -154,7 +180,8 @@
 <body>
 
 <header>
-    <h1>HSM Scene 10: Scoreboard Controller</h1>
+    <h1>HSM Scene 10 Controller</h1>
+    <div class="sub-header">Keys: Space/Right (Next) | Left (Prev)</div>
 </header>
 
 <div id="scene-container">
@@ -166,28 +193,51 @@
 </div>
 
 <script>
-    // --- 1. THE DATA ---
-    const GAME = "GAME";
+    // --- 1. CONFIGURATION ---
     
+    // Enum Definition for Reference
+    const ScoreboardMode = {
+        BASKET_BALL_GAME: 0,
+        FIREWORKS_DISPLAY: 1,
+        CLOCK_ONLY: 2,
+        COUNTDOWN: 3,
+        OFF: 4
+    };
+    
+    // Scene Data
     const scenes = [
         // --- INTRO / BUILD UP ---
-        { description: "Start of Scene 10: Tip Off", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":1,"clockMinutes":8,"clockSeconds":0,"mode": GAME,"clockRunning":true} },
-        { description: "End of 1st Quarter: Wildcats Lead", data: {"homeScore":18,"awayScore":14,"homeFouls":1,"awayFouls":2,"quarter":2,"clockMinutes":8,"clockSeconds":0,"mode": GAME,"clockRunning":true} },
-        { description: "Halftime: West High Takes Lead", data: {"homeScore":32,"awayScore":38,"homeFouls":3,"awayFouls":2,"quarter":3,"clockMinutes":8,"clockSeconds":0,"mode": GAME,"clockRunning":true} },
-        { description: "End of 3rd Quarter: Gap Widens", data: {"homeScore":48,"awayScore":55,"homeFouls":4,"awayFouls":3,"quarter":4,"clockMinutes":8,"clockSeconds":0,"mode": GAME,"clockRunning":true} },
-        { description: "Mid 4th Quarter: Comeback Begins", data: {"homeScore":60,"awayScore":64,"homeFouls":4,"awayFouls":4,"quarter":4,"clockMinutes":3,"clockSeconds":45,"mode": GAME,"clockRunning":true} },
+        { description: "Start: Tip Off", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":1,"clockMinutes":8,"clockSeconds":0,"mode": 0,"clockRunning":true} },
+        
+        { description: "End Q1: Wildcats Lead", data: {"homeScore":18,"awayScore":14,"homeFouls":1,"awayFouls":2,"quarter":2,"clockMinutes":8,"clockSeconds":0,"mode": 0,"clockRunning":true} },
+        
+        { description: "Halftime: West High Leads", data: {"homeScore":32,"awayScore":38,"homeFouls":3,"awayFouls":2,"quarter":3,"clockMinutes":8,"clockSeconds":0,"mode": 0,"clockRunning":true} },
+        
+        { description: "End Q3: Gap Widens", data: {"homeScore":48,"awayScore":55,"homeFouls":4,"awayFouls":3,"quarter":4,"clockMinutes":8,"clockSeconds":0,"mode": 0,"clockRunning":true} },
+        
+        { description: "Mid Q4: Comeback Begins", data: {"homeScore":60,"awayScore":64,"homeFouls":4,"awayFouls":4,"quarter":4,"clockMinutes":3,"clockSeconds":45,"mode": 0,"clockRunning":true} },
         
         // --- THE CLIMAX ---
-        { description: "Pre-Song: Bolton Scores, Down by 2", data: {"homeScore":66,"awayScore":68,"homeFouls":4,"awayFouls":4,"quarter":4,"clockMinutes":1,"clockSeconds":30,"mode": GAME,"clockRunning":true} },
+        { description: "Pre-Song: Down by 2", data: {"homeScore":66,"awayScore":68,"homeFouls":4,"awayFouls":4,"quarter":4,"clockMinutes":1,"clockSeconds":30,"mode": 0,"clockRunning":true} },
         
-        // --- POWER OUTAGE HAPPENS NOW ---
+        // --- POWER OUTAGE (Mode 4) ---
+        { description: "BLACKOUT (Power Outage)", data: {"homeScore":66,"awayScore":68,"homeFouls":4,"awayFouls":4,"quarter":4,"clockMinutes":1,"clockSeconds":30,"mode": 4,"clockRunning":false} },
         
-        { description: "Lights Up: 5 Seconds Left (Clock Stopped)", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":5,"mode": GAME,"clockRunning":false} },
-        { description: "Manual Count: 4", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":4,"mode": GAME,"clockRunning":false} },
-        { description: "Manual Count: 3", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":3,"mode": GAME,"clockRunning":false} },
-        { description: "Manual Count: 2", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":2,"mode": GAME,"clockRunning":false} },
-        { description: "Manual Count: 1", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":1,"mode": GAME,"clockRunning":false} },
-        { description: "BUZZER: Wildcats Win by 1!", data: {"homeScore":77,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":0,"mode": GAME,"clockRunning":false} },
+        // --- RESUME ---
+        { description: "Lights Up: 5 Sec Left", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":5,"mode": 0,"clockRunning":false} },
+        
+        { description: "Manual Count: 4", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":4,"mode": 0,"clockRunning":false} },
+        
+        { description: "Manual Count: 3", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":3,"mode": 0,"clockRunning":false} },
+        
+        { description: "Manual Count: 2", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":2,"mode": 0,"clockRunning":false} },
+        
+        { description: "Manual Count: 1", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":1,"mode": 0,"clockRunning":false} },
+        
+        { description: "BUZZER: Wildcats Win!", data: {"homeScore":77,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":0,"mode": 0,"clockRunning":false} },
+
+        // --- CELEBRATION (Mode 1) ---
+        { description: "VICTORY CELEBRATION", data: {"homeScore":77,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":0,"mode": 1,"clockRunning":false} },
     ];
 
     let currentIndex = -1;
@@ -197,14 +247,20 @@
     function init() {
         scenes.forEach((scene, index) => {
             const el = document.createElement('div');
-            el.className = 'scene-card';
+            el.className = `scene-card mode-${scene.data.mode}`;
             el.id = `scene-${index}`;
             
             // Format time for visual display
             const timeStr = `${scene.data.clockMinutes}:${scene.data.clockSeconds.toString().padStart(2, '0')}`;
+            
+            // Get Mode Name for UI
+            const modeName = Object.keys(ScoreboardMode).find(key => ScoreboardMode[key] === scene.data.mode);
 
             el.innerHTML = `
-                <div class="scene-header">CUE #${index + 1}: ${scene.description}</div>
+                <div class="scene-header">
+                    <span>CUE #${index + 1}: ${scene.description}</span>
+                    <span class="mode-badge">MODE: ${scene.data.mode} (${modeName})</span>
+                </div>
                 <div class="data-display">
                     <pre class="json-block">${JSON.stringify(scene.data, null, 2)}</pre>
                     <div class="visual-summary">
@@ -226,18 +282,13 @@
 
     // --- 3. NAVIGATION LOGIC ---
     function updateUI() {
-        // Remove active class from all
         document.querySelectorAll('.scene-card').forEach(el => el.classList.remove('active'));
 
         if (currentIndex >= 0 && currentIndex < scenes.length) {
             const activeEl = document.getElementById(`scene-${currentIndex}`);
             if (activeEl) {
                 activeEl.classList.add('active');
-                
-                // Auto Scroll Logic
                 activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                // Trigger the placeholder method
                 onSceneChange(scenes[currentIndex].data);
             }
         }
@@ -260,7 +311,7 @@
     // --- 4. KEYBOARD SHORTCUTS ---
     document.addEventListener('keydown', (e) => {
         if (e.code === "Space" || e.code === "ArrowRight") {
-            e.preventDefault(); // Prevent page scroll on space
+            e.preventDefault(); 
             nextScene();
         } else if (e.code === "ArrowLeft") {
             prevScene();
@@ -268,21 +319,20 @@
     });
 
     // --- 5. PLACEHOLDER METHOD ---
-    /**
-     * This function is called every time the scene changes.
-     * Use this to trigger your physical scoreboard, send a websocket message, etc.
-     */
     function onSceneChange(newScene) {
-        console.log("%c SCENE CHANGED ", "background: #2ecc71; color: #000; font-weight: bold");
-        console.log(newScene);
-
-        // EXAMPLE INTEGRATION:
-        // sendToScoreboard(newScene);
+        console.log("--- SCENE CHANGE DETECTED ---");
+        console.log("Sending to scoreboard:", newScene);
+        
+        // Example: logic to handle specific modes
+        if(newScene.mode === ScoreboardMode.OFF) {
+            console.log(">> CUT POWER <<");
+        }
+        if(newScene.mode === ScoreboardMode.FIREWORKS_DISPLAY) {
+            console.log(">> CUE FIREWORKS <<");
+        }
     }
 
-    // Run startup
     init();
-
 </script>
 
 </body>
