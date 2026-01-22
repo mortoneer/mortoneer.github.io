@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSM Scene 10 Sequencer</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #e0e0e0;
+            --accent-color: #ffcc00; /* Wildcats Gold */
+            --highlight-color: #2ecc71; /* Active Green */
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding-bottom: 100px; /* Space for fixed footer */
+        }
+
+        header {
+            background-color: #000;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; }
+
+        #scene-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 10px;
+        }
+
+        .scene-card {
+            background-color: var(--card-bg);
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #555;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+        }
+
+        /* The Visual "Cursor" for the Active Scene */
+        .scene-card.active {
+            opacity: 1;
+            transform: scale(1.02);
+            border-left: 8px solid var(--highlight-color);
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.2);
+            background-color: #383838;
+        }
+
+        .scene-card.active::after {
+            content: "CURRENT CUE";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--highlight-color);
+            color: #000;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .scene-header {
+            font-weight: bold;
+            color: var(--accent-color);
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+        }
+
+        .data-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .json-block {
+            flex: 1;
+            background: #111;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            min-width: 250px;
+        }
+
+        .visual-summary {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            background: #222;
+            border-radius: 4px;
+            padding: 10px;
+            min-width: 200px;
+        }
+
+        .score-box { text-align: center; }
+        .score-val { font-size: 1.5rem; font-weight: bold; color: #fff; }
+        .clock-val { font-size: 1.5rem; font-weight: bold; color: var(--accent-color); border: 2px solid #555; padding: 5px 10px; border-radius: 5px;}
+
+        /* Fixed Controls */
+        #controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #000;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            border-top: 2px solid #444;
+            box-shadow: 0 -5px 10px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+
+        #btn-prev { background-color: #555; color: white; }
+        #btn-prev:hover { background-color: #777; }
+
+        #btn-next { background-color: var(--highlight-color); color: black; }
+        #btn-next:hover { background-color: #27ae60; }
+        
+        #btn-next:active { transform: translateY(2px); }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>HSM Scene 10: Scoreboard Controller</h1>
+</header>
+
+<div id="scene-container">
+    </div>
+
+<div id="controls">
+    <button id="btn-prev" onclick="prevScene()">&#8592; PREV</button>
+    <button id="btn-next" onclick="nextScene()">NEXT (Space) &#8594;</button>
+</div>
+
+<script>
+    // --- 1. THE DATA ---
+    const GAME = "GAME";
+    
+    const scenes = [
+        // --- INTRO / BUILD UP ---
+        { description: "Start of Scene 10: Tip Off", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":1,"clockMinutes":8,"clockSeconds":0,"mode": GAME,"clockRunning":true} },
+        { description: "End of 1st Quarter: Wildcats Lead", data: {"homeScore":18,"awayScore":14,"homeFouls":1,"awayFouls":2,"quarter":2,"clockMinutes":8,"clockSeconds":0,"mode": GAME,"clockRunning":true} },
+        { description: "Halftime: West High Takes Lead", data: {"homeScore":32,"awayScore":38,"homeFouls":3,"awayFouls":2,"quarter":3,"clockMinutes":8,"clockSeconds":0,"mode": GAME,"clockRunning":true} },
+        { description: "End of 3rd Quarter: Gap Widens", data: {"homeScore":48,"awayScore":55,"homeFouls":4,"awayFouls":3,"quarter":4,"clockMinutes":8,"clockSeconds":0,"mode": GAME,"clockRunning":true} },
+        { description: "Mid 4th Quarter: Comeback Begins", data: {"homeScore":60,"awayScore":64,"homeFouls":4,"awayFouls":4,"quarter":4,"clockMinutes":3,"clockSeconds":45,"mode": GAME,"clockRunning":true} },
+        
+        // --- THE CLIMAX ---
+        { description: "Pre-Song: Bolton Scores, Down by 2", data: {"homeScore":66,"awayScore":68,"homeFouls":4,"awayFouls":4,"quarter":4,"clockMinutes":1,"clockSeconds":30,"mode": GAME,"clockRunning":true} },
+        
+        // --- POWER OUTAGE HAPPENS NOW ---
+        
+        { description: "Lights Up: 5 Seconds Left (Clock Stopped)", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":5,"mode": GAME,"clockRunning":false} },
+        { description: "Manual Count: 4", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":4,"mode": GAME,"clockRunning":false} },
+        { description: "Manual Count: 3", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":3,"mode": GAME,"clockRunning":false} },
+        { description: "Manual Count: 2", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":2,"mode": GAME,"clockRunning":false} },
+        { description: "Manual Count: 1", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":1,"mode": GAME,"clockRunning":false} },
+        { description: "BUZZER: Wildcats Win by 1!", data: {"homeScore":77,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":0,"mode": GAME,"clockRunning":false} },
+    ];
+
+    let currentIndex = -1;
+    const container = document.getElementById('scene-container');
+
+    // --- 2. INITIALIZATION ---
+    function init() {
+        scenes.forEach((scene, index) => {
+            const el = document.createElement('div');
+            el.className = 'scene-card';
+            el.id = `scene-${index}`;
+            
+            // Format time for visual display
+            const timeStr = `${scene.data.clockMinutes}:${scene.data.clockSeconds.toString().padStart(2, '0')}`;
+
+            el.innerHTML = `
+                <div class="scene-header">CUE #${index + 1}: ${scene.description}</div>
+                <div class="data-display">
+                    <pre class="json-block">${JSON.stringify(scene.data, null, 2)}</pre>
+                    <div class="visual-summary">
+                        <div class="score-box">
+                            <div>HOME</div>
+                            <div class="score-val" style="color:#ffcc00">${scene.data.homeScore}</div>
+                        </div>
+                        <div class="clock-val">${timeStr}</div>
+                        <div class="score-box">
+                            <div>AWAY</div>
+                            <div class="score-val" style="color:#ff4444">${scene.data.awayScore}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(el);
+        });
+    }
+
+    // --- 3. NAVIGATION LOGIC ---
+    function updateUI() {
+        // Remove active class from all
+        document.querySelectorAll('.scene-card').forEach(el => el.classList.remove('active'));
+
+        if (currentIndex >= 0 && currentIndex < scenes.length) {
+            const activeEl = document.getElementById(`scene-${currentIndex}`);
+            if (activeEl) {
+                activeEl.classList.add('active');
+                
+                // Auto Scroll Logic
+                activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Trigger the placeholder method
+                onSceneChange(scenes[currentIndex].data);
+            }
+        }
+    }
+
+    function nextScene() {
+        if (currentIndex < scenes.length - 1) {
+            currentIndex++;
+            updateUI();
+        }
+    }
+
+    function prevScene() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateUI();
+        }
+    }
+
+    // --- 4. KEYBOARD SHORTCUTS ---
+    document.addEventListener('keydown', (e) => {
+        if (e.code === "Space" || e.code === "ArrowRight") {
+            e.preventDefault(); // Prevent page scroll on space
+            nextScene();
+        } else if (e.code === "ArrowLeft") {
+            prevScene();
+        }
+    });
+
+    // --- 5. PLACEHOLDER METHOD ---
+    /**
+     * This function is called every time the scene changes.
+     * Use this to trigger your physical scoreboard, send a websocket message, etc.
+     */
+    function onSceneChange(newScene) {
+        console.log("%c SCENE CHANGED ", "background: #2ecc71; color: #000; font-weight: bold");
+        console.log(newScene);
+
+        // EXAMPLE INTEGRATION:
+        // sendToScoreboard(newScene);
+    }
+
+    // Run startup
+    init();
+
+</script>
+
+</body>
+</html>
