@@ -471,7 +471,7 @@
         const jsonPayload = JSON.stringify({ scene: newScene, index: -1 });
         
         // Send command via Serial
-        sendCommand('SET_SCENE_FROM_JSON', jsonPayload);
+        sendCommand('SET_FROM_JSON', jsonPayload);
     }
 
     init();
