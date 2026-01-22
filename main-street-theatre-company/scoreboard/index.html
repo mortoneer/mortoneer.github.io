@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSM Scene Sequencer</title>
+    <title>HSM Scoreboard</title>
     <style>
         :root {
             --bg-color: #1a1a1a;
             --card-bg: #2d2d2d;
             --text-color: #e0e0e0;
-            --accent-color: #ffcc00; /* Wildcats Gold */
-            --highlight-color: #2ecc71; /* Active Green */
-            --off-color: #000000;
-            --fireworks-color: #e74c3c;
+            --accent-color: #ffcc00;
+            --highlight-color: #2ecc71;
+            --error-color: #e74c3c;
+            --input-bg: #444;
         }
 
         body {
@@ -20,22 +20,62 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding-bottom: 120px; /* Space for fixed footer */
+            padding-bottom: 140px;
         }
 
+        /* --- HEADER & CONNECTION PANEL --- */
         header {
             background-color: #000;
-            padding: 20px;
-            text-align: center;
+            padding: 15px;
             border-bottom: 2px solid var(--accent-color);
             position: sticky;
             top: 0;
             z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
-        h1 { margin: 0; font-size: 1.5rem; }
-        .sub-header { font-size: 0.8rem; color: #888; margin-top: 5px; }
+        .connection-panel {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            background: #222;
+            padding: 10px;
+            border-radius: 6px;
+        }
 
+        input {
+            background: var(--input-bg);
+            border: 1px solid #666;
+            color: white;
+            padding: 8px;
+            font-family: inherit;
+            border-radius: 4px;
+        }
+
+        .btn-conn {
+            padding: 8px 15px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+        }
+        .btn-connect { background-color: var(--highlight-color); color: #000; }
+        .btn-disconnect { background-color: var(--error-color); color: #fff; opacity: 0.5; pointer-events: none;}
+        
+        .status-dot {
+            height: 12px; width: 12px; 
+            background-color: #555; 
+            border-radius: 50%; 
+            display: inline-block;
+        }
+        .status-dot.connected { background-color: var(--highlight-color); box-shadow: 0 0 8px var(--highlight-color); }
+
+        /* --- SCENE LIST --- */
         #scene-container {
             max-width: 800px;
             margin: 20px auto;
@@ -50,44 +90,14 @@
             border-left: 5px solid #555;
             opacity: 0.5;
             transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            position: relative;
         }
 
-        /* The Visual "Cursor" for the Active Scene */
         .scene-card.active {
             opacity: 1;
             transform: scale(1.02);
             border-left: 8px solid var(--highlight-color);
-            box-shadow: 0 0 20px rgba(46, 204, 113, 0.2);
             background-color: #383838;
-        }
-
-        /* Specific styles for special modes */
-        .scene-card.mode-4.active { /* OFF */
-            border-left-color: #555;
-            background-color: #000;
-            box-shadow: none;
-        }
-        
-        .scene-card.mode-1.active { /* FIREWORKS */
-            border-left-color: var(--fireworks-color);
-            box-shadow: 0 0 30px rgba(231, 76, 60, 0.4);
-        }
-
-        .scene-card.active::after {
-            content: "CURRENT CUE";
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: var(--highlight-color);
-            color: #000;
-            font-weight: bold;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
         }
 
         .scene-header {
@@ -96,136 +106,57 @@
             border-bottom: 1px solid #444;
             padding-bottom: 5px;
             margin-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
+            display: flex; justify-content: space-between;
         }
 
-        .mode-badge {
-            font-size: 0.7rem;
-            background: #444;
-            color: #fff;
-            padding: 2px 6px;
-            border-radius: 3px;
-        }
-
-        .data-display {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .json-block {
-            flex: 1;
-            background: #111;
-            padding: 10px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            overflow-x: auto;
-            min-width: 250px;
-            border: 1px solid #333;
-        }
-
+        /* --- VISUAL MODES --- */
         .visual-summary {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            background: #222;
-            border-radius: 4px;
-            padding: 10px;
-            min-width: 200px;
+            padding: 10px; border-radius: 4px; margin-top: 10px; min-height: 80px;
         }
-
-        .score-box { text-align: center; }
+        
+        /* Mode 0: Game */
+        .visual-summary.mode-0 { display: flex; justify-content: space-around; align-items: center; background: #222; }
         .score-val { font-size: 1.5rem; font-weight: bold; color: #fff; }
         .clock-val { font-size: 1.5rem; font-weight: bold; color: var(--accent-color); border: 2px solid #555; padding: 5px 10px; border-radius: 5px;}
-
-        /* Fixed Controls */
-        #controls {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #000;
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            border-top: 2px solid #444;
-            box-shadow: 0 -5px 10px rgba(0,0,0,0.5);
-            z-index: 1000;
-        }
-
-        button {
-            padding: 12px 30px;
-            font-size: 1.2rem;
-            font-family: inherit;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            transition: background 0.2s;
-        }
-
-        #btn-prev { background-color: #555; color: white; }
-        #btn-prev:hover { background-color: #777; }
-
-        #btn-next { background-color: var(--highlight-color); color: black; }
-        #btn-next:hover { background-color: #27ae60; }
         
-        #btn-next:active { transform: translateY(2px); }
+        /* Mode 1: Victory */
+        .visual-summary.mode-1 { background: linear-gradient(135deg, #2c3e50, #c0392b); flex-direction: column; justify-content: center; text-align: center; border: 2px solid #e74c3c; animation: pulse 2s infinite; }
+        .victory-text { font-size: 1.2rem; font-weight: bold; color: #fff; text-shadow: 0 0 10px #f1c40f; }
 
-        /* --- NEW STYLES FOR VISUAL MODES --- */
+        /* Mode 2: Clock */
+        .visual-summary.mode-2 { background: #000; display: flex; justify-content: center; align-items: center; }
+        .visual-summary.mode-2 .clock-val { font-size: 2.5rem; border: none; color: #fff; }
 
-        /* MODE 0: Standard Game */
-        .visual-summary.mode-0 {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background: #222;
-        }
+        /* Mode 4: OFF */
+        .visual-summary.mode-4 { background: #000; display: flex; justify-content: center; align-items: center; border: 1px dashed #444; }
+        .offline-text { color: #333; font-family: monospace; font-weight: bold; letter-spacing: 2px; }
 
-        /* MODE 1: Fireworks / Victory */
-        .visual-summary.mode-1 {
-            background: linear-gradient(135deg, #2c3e50, #c0392b);
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            border: 2px solid #e74c3c;
-            animation: pulse 2s infinite;
-        }
-        .victory-text {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 10px #f1c40f;
-            margin-bottom: 5px;
-        }
+        .json-block { background: #111; padding: 10px; border-radius: 4px; font-size: 0.75rem; overflow-x: auto; border: 1px solid #333; margin: 0; }
 
-        /* MODE 2: Clock Only */
-        .visual-summary.mode-2 {
-            background: #000;
-            justify-content: center;
-            align-items: center;
+        /* --- CONTROLS FOOTER --- */
+        #controls {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background-color: #000; padding: 15px;
+            display: flex; justify-content: center; gap: 20px;
+            border-top: 2px solid #444; z-index: 1000;
         }
-        .visual-summary.mode-2 .clock-val {
-            font-size: 2.5rem; /* Huge clock */
-            border: none;
-            color: #fff;
-        }
+        .btn-nav { padding: 12px 30px; font-size: 1.2rem; font-weight: bold; cursor: pointer; border-radius: 5px; border: none; }
+        #btn-prev { background-color: #555; color: white; }
+        #btn-next { background-color: var(--highlight-color); color: black; }
 
-        /* MODE 4: OFF / Power Outage */
-        .visual-summary.mode-4 {
-            background: #000;
-            justify-content: center;
-            align-items: center;
-            border: 1px dashed #444;
-        }
-        .offline-text {
-            color: #333;
+        /* --- LOG BOX --- */
+        #log-box {
+            position: fixed; bottom: 90px; right: 10px;
+            width: 300px; height: 150px;
+            background: rgba(0,0,0,0.9);
+            border: 1px solid #555;
+            color: #0f0;
+            font-size: 10px;
+            overflow-y: auto;
+            padding: 5px;
+            z-index: 2000;
             font-family: monospace;
-            font-weight: bold;
-            letter-spacing: 2px;
+            display: flex; flex-direction: column-reverse; /* Newest at bottom visually */
         }
 
         @keyframes pulse {
@@ -233,172 +164,248 @@
             70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
             100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
         }
-
     </style>
 </head>
 <body>
 
 <header>
-    <h1>HSM Scene Controller</h1>
-    <div class="sub-header">Keys: Space/Right (Next) | Left (Prev)</div>
+    <div style="font-size: 1.5rem; font-weight: bold;">HSM SCENE 10</div>
+    
+    <div class="connection-panel">
+        <span id="connection-status" class="status-dot"></span>
+        <label>MAC: <input type="text" id="macAddressInput" value="FF:FF:FF:FF:FF:FF" size="18"></label>
+        <label>Event: <input type="text" id="eventTypeInput" value="1" size="2"></label>
+        <button id="btnConnect" class="btn-conn btn-connect" onclick="connectSerial()">Connect Serial</button>
+        <button id="btnDisconnect" class="btn-conn btn-disconnect" onclick="disconnectSerial()">Disconnect</button>
+    </div>
 </header>
 
-<div id="scene-container">
-    </div>
+<div id="scene-container"></div>
+
+<div id="log-box"></div>
 
 <div id="controls">
-    <button id="btn-prev" onclick="prevScene()">&#8592; PREV</button>
-    <button id="btn-next" onclick="nextScene()">NEXT (Space) &#8594;</button>
+    <button id="btn-prev" class="btn-nav" onclick="prevScene()">&#8592; PREV</button>
+    <button id="btn-next" class="btn-nav" onclick="nextScene()">NEXT (Space) &#8594;</button>
 </div>
 
 <script>
-    // --- 1. CONFIGURATION ---
-    
-    // Enum Definition for Reference
-    const ScoreboardMode = {
-        BASKET_BALL_GAME: 0,
-        FIREWORKS_DISPLAY: 1,
-        CLOCK_ONLY: 2,
-        COUNTDOWN: 3,
-        OFF: 4
-    };
-    
-    // Scene Data
+    // --- 1. CONFIGURATION & DATA ---
+    const ScoreboardMode = { BASKET_BALL_GAME: 0, FIREWORKS_DISPLAY: 1, CLOCK_ONLY: 2, COUNTDOWN: 3, OFF: 4 };
+
     const scenes = [
-        { description: "Show Start. OFF", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":0},
-        { description: "New Years Count Down", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":10,"mode":2,"clockRunning":false},"index":1},
-        { description: "NINE", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":9,"mode":2,"clockRunning":false},"index":2},
-        { description: "EIGHT", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":8,"mode":2,"clockRunning":false},"index":3},
-        { description: "SEVEN", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":7,"mode":2,"clockRunning":false},"index":4},
-        { description: "SIX", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":6,"mode":2,"clockRunning":false},"index":5},
-        { description: "FIVE", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":5,"mode":2,"clockRunning":false},"index":6},
-        { description: "FOUR", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":4,"mode":2,"clockRunning":false},"index":7},
-        { description: "THREE", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":3,"mode":2,"clockRunning":false},"index":8},
-        { description: "TWO", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":2,"mode":2,"clockRunning":false},"index":9},
-        { description: "ONE", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":1,"mode":2,"clockRunning":false},"index":10},
-        { description: "Fireworks", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":1,"clockRunning":false},"index":11},
-        { description: "Off", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":12},
-        { description: "13. Act 1 Scene 4 - Get Your Head In The Game - 2:30 minutes at practice", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":2,"clockSeconds":30,"mode":2,"clockRunning":true},"index":13},
-        { description: "OFF", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":14},
-        { description: "15. Act 2 Scene 4 - Game Board Reset", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":1,"clockMinutes":8,"clockSeconds":0,"mode":0,"clockRunning":false},"index":15},
-        { description: "OFF", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":16},
-        // --- INTRO / BUILD UP ---
+        {"description": "Show Start. OFF", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":0},
+        {"description": "New Years Count Down", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":10,"mode":2,"clockRunning":false},"index":1},
+        {"description": "NINE", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":9,"mode":2,"clockRunning":false},"index":2},
+        {"description": "EIGHT", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":8,"mode":2,"clockRunning":false},"index":3},
+        {"description": "SEVEN", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":7,"mode":2,"clockRunning":false},"index":4},
+        {"description": "SIX", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":6,"mode":2,"clockRunning":false},"index":5},
+        {"description": "FIVE", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":5,"mode":2,"clockRunning":false},"index":6},
+        {"description": "FOUR", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":4,"mode":2,"clockRunning":false},"index":7},
+        {"description": "THREE", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":3,"mode":2,"clockRunning":false},"index":8},
+        {"description": "TWO", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":2,"mode":2,"clockRunning":false},"index":9},
+        {"description": "ONE", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":1,"mode":2,"clockRunning":false},"index":10},
+        {"description": "Fireworks", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":1,"clockRunning":false},"index":11},
+        {"description": "Off", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":12},
+        {"description": "13. Act 1 Scene 4 - Get Your Head In The Game - 2:30 minutes at practice", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":2,"clockSeconds":30,"mode":2,"clockRunning":true},"index":13},
+        {"description": "OFF", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":14},
+        {"description": "15. Act 2 Scene 4 - Game Board Reset", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":1,"clockMinutes":8,"clockSeconds":0,"mode":0,"clockRunning":false},"index":15},
+        {"description": "OFF", "data":{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":4,"clockRunning":false},"index":16},
+        // GAME
         { description: "Start: Tip Off", data: {"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":1,"clockMinutes":8,"clockSeconds":0,"mode": 0,"clockRunning":true} },
-        
         { description: "End Q1: Wildcats Lead", data: {"homeScore":18,"awayScore":14,"homeFouls":1,"awayFouls":2,"quarter":2,"clockMinutes":8,"clockSeconds":0,"mode": 0,"clockRunning":true} },
-        
         { description: "Halftime: West High Leads", data: {"homeScore":32,"awayScore":38,"homeFouls":3,"awayFouls":2,"quarter":3,"clockMinutes":8,"clockSeconds":0,"mode": 0,"clockRunning":true} },
-        
         { description: "End Q3: Gap Widens", data: {"homeScore":48,"awayScore":55,"homeFouls":4,"awayFouls":3,"quarter":4,"clockMinutes":8,"clockSeconds":0,"mode": 0,"clockRunning":true} },
-        
         { description: "Mid Q4: Comeback Begins", data: {"homeScore":60,"awayScore":64,"homeFouls":4,"awayFouls":4,"quarter":4,"clockMinutes":3,"clockSeconds":45,"mode": 0,"clockRunning":true} },
-        
-        // --- THE CLIMAX ---
         { description: "Pre-Song: Down by 2", data: {"homeScore":66,"awayScore":68,"homeFouls":4,"awayFouls":4,"quarter":4,"clockMinutes":1,"clockSeconds":30,"mode": 0,"clockRunning":true} },
         
-        // --- POWER OUTAGE (Mode 4) ---
+        // POWER OUTAGE
         { description: "BLACKOUT (Power Outage)", data: {"homeScore":66,"awayScore":68,"homeFouls":4,"awayFouls":4,"quarter":4,"clockMinutes":1,"clockSeconds":30,"mode": 4,"clockRunning":false} },
         
-        // --- RESUME ---
+        // RESUME
         { description: "Lights Up: 5 Sec Left", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":5,"mode": 0,"clockRunning":false} },
-        
         { description: "Manual Count: 4", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":4,"mode": 0,"clockRunning":false} },
-        
         { description: "Manual Count: 3", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":3,"mode": 0,"clockRunning":false} },
-        
         { description: "Manual Count: 2", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":2,"mode": 0,"clockRunning":false} },
-        
         { description: "Manual Count: 1", data: {"homeScore":74,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":1,"mode": 0,"clockRunning":false} },
-        
         { description: "BUZZER: Wildcats Win!", data: {"homeScore":77,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":0,"mode": 0,"clockRunning":false} },
-
-        // --- CELEBRATION (Mode 1) ---
+        
+        // VICTORY
         { description: "VICTORY CELEBRATION", data: {"homeScore":77,"awayScore":76,"homeFouls":5,"awayFouls":5,"quarter":4,"clockMinutes":0,"clockSeconds":0,"mode": 1,"clockRunning":false} },
     ];
 
+    // --- 2. SERIAL PORT VARIABLES ---
+    let port;
+    let reader;
+    let writer;
+    let keepReading = false;
+    const MAX_LOG_LINES = 50;
+    let lineBuffer = '';
+
+    // --- 3. SERIAL LOGIC ---
+
+    async function connectSerial() {
+        if (!('serial' in navigator)) {
+            alert('Web Serial API not supported. Use Chrome or Edge.');
+            return;
+        }
+        try {
+            port = await navigator.serial.requestPort();
+            await port.open({ baudRate: 115200 });
+            
+            log('Port Connected');
+            updateConnectionUI(true);
+            keepReading = true;
+            readUntilClosed();
+        } catch (error) {
+            log('Connect Error: ' + error.message, true);
+        }
+    }
+
+    async function disconnectSerial() {
+        keepReading = false;
+        if (reader) {
+            try {
+                await reader.cancel();
+            } catch (error) { console.error(error); }
+        }
+        if (port) {
+            try {
+                await port.close();
+            } catch(e) { console.error(e); }
+            port = null;
+        }
+        updateConnectionUI(false);
+        log('Port Disconnected');
+    }
+
+    async function readUntilClosed() {
+        const textDecoder = new TextDecoder();
+        while (port.readable && keepReading) {
+            reader = port.readable.getReader();
+            try {
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    
+                    lineBuffer += textDecoder.decode(value);
+                    let newlineIndex;
+                    while ((newlineIndex = lineBuffer.indexOf('\n')) !== -1) {
+                        const line = lineBuffer.slice(0, newlineIndex).trim();
+                        lineBuffer = lineBuffer.slice(newlineIndex + 1);
+                        if (line) log('RX: ' + line);
+                    }
+                }
+            } catch (error) {
+                log('Read Error: ' + error.message, true);
+                if (error.message.includes("device has been lost")) disconnectSerial();
+            } finally {
+                reader.releaseLock();
+            }
+        }
+    }
+
+    async function sendCommand(command, data) {
+        if (!port || !port.writable) {
+            log('TX Failed: Not Connected', true);
+            return;
+        }
+
+        writer = port.writable.getWriter();
+        const macAddress = document.getElementById('macAddressInput').value;
+        const eventType = document.getElementById('eventTypeInput').value;
+
+        // Protocol: RELAY | MAC | EVENT | COMMAND | DATA
+        let message = `RELAY|${macAddress}|${eventType}|${command}`;
+        if (data !== undefined && data !== null && data !== '') {
+            message += `|${data}`;
+        }
+        message += '\n';
+
+        const textEncoder = new TextEncoder();
+        try {
+            await writer.write(textEncoder.encode(message));
+            log('TX: ' + command);
+        } catch (error) {
+            log('TX Error: ' + error.message, true);
+        } finally {
+            writer.releaseLock();
+        }
+    }
+
+    function updateConnectionUI(isConnected) {
+        const dot = document.getElementById('connection-status');
+        const btnCon = document.getElementById('btnConnect');
+        const btnDis = document.getElementById('btnDisconnect');
+
+        if(isConnected) {
+            dot.classList.add('connected');
+            btnCon.style.opacity = '0.5'; btnCon.style.pointerEvents = 'none';
+            btnDis.style.opacity = '1'; btnDis.style.pointerEvents = 'auto';
+        } else {
+            dot.classList.remove('connected');
+            btnCon.style.opacity = '1'; btnCon.style.pointerEvents = 'auto';
+            btnDis.style.opacity = '0.5'; btnDis.style.pointerEvents = 'none';
+        }
+    }
+
+    function log(msg, isError = false) {
+        const box = document.getElementById('log-box');
+        const line = document.createElement('div');
+        line.textContent = `> ${msg}`;
+        if(isError) line.style.color = '#e74c3c';
+        box.prepend(line);
+        if(box.children.length > MAX_LOG_LINES) {
+            box.removeChild(box.lastChild);
+        }
+    }
+
+    // --- 4. SCENE CONTROLLER LOGIC ---
     let currentIndex = -1;
     const container = document.getElementById('scene-container');
 
-    // --- 2. INITIALIZATION ---
-// --- 2. INITIALIZATION ---
     function init() {
         scenes.forEach((scene, index) => {
             const el = document.createElement('div');
             el.className = `scene-card mode-${scene.data.mode}`;
             el.id = `scene-${index}`;
-            
-            // Format time 
             const timeStr = `${scene.data.clockMinutes}:${scene.data.clockSeconds.toString().padStart(2, '0')}`;
-            
-            // Get Mode Name for UI Label
             const modeName = Object.keys(ScoreboardMode).find(key => ScoreboardMode[key] === scene.data.mode);
 
-            // --- GENERATE DIFFERENT HTML BASED ON MODE ---
+            // Visual HTML Generation
             let visualHtml = '';
-
             switch (scene.data.mode) {
                 case 4: // OFF
-                    visualHtml = `
-                        <div class="visual-summary mode-4">
-                            <div class="offline-text">/// SYSTEM OFFLINE ///</div>
-                        </div>`;
+                    visualHtml = `<div class="visual-summary mode-4"><div class="offline-text">/// SYSTEM OFFLINE ///</div></div>`;
                     break;
-
-                case 1: // FIREWORKS / VICTORY
-                    visualHtml = `
-                        <div class="visual-summary mode-1">
-                            <div class="victory-text">🎉 WILDCATS WIN! 🎉</div>
-                            <div style="color:white; font-size:1.2rem;">${scene.data.homeScore} - ${scene.data.awayScore}</div>
-                        </div>`;
+                case 1: // FIREWORKS
+                    visualHtml = `<div class="visual-summary mode-1"><div class="victory-text">🎉 WILDCATS WIN! 🎉</div><div style="color:white;">${scene.data.homeScore} - ${scene.data.awayScore}</div></div>`;
                     break;
-
                 case 2: // CLOCK ONLY
-                    visualHtml = `
-                        <div class="visual-summary mode-2">
-                            <div class="clock-val">${timeStr}</div>
-                        </div>`;
+                    visualHtml = `<div class="visual-summary mode-2"><div class="clock-val">${timeStr}</div></div>`;
                     break;
-
-                case 3: // COUNTDOWN (Skipping per instructions, using default game view)
-                case 0: // BASKETBALL GAME (Default)
-                default:
-                    visualHtml = `
-                        <div class="visual-summary mode-0">
-                            <div class="score-box">
-                                <div style="font-size:0.7rem; color:#888;">HOME</div>
-                                <div class="score-val" style="color:#ffcc00">${scene.data.homeScore}</div>
-                            </div>
-                            <div style="text-align:center">
-                                <div class="clock-val">${timeStr}</div>
-                                <div style="font-size:0.7rem; color:#666; margin-top:2px;">Q${scene.data.quarter}</div>
-                            </div>
-                            <div class="score-box">
-                                <div style="font-size:0.7rem; color:#888;">AWAY</div>
-                                <div class="score-val" style="color:#ff4444">${scene.data.awayScore}</div>
-                            </div>
-                        </div>`;
+                default: // GAME
+                    visualHtml = `<div class="visual-summary mode-0">
+                        <div style="text-align:center"><div style="font-size:0.7rem; color:#888;">HOME</div><div class="score-val" style="color:#ffcc00">${scene.data.homeScore}</div></div>
+                        <div style="text-align:center"><div class="clock-val">${timeStr}</div><div style="font-size:0.7rem; color:#666;">Q${scene.data.quarter}</div></div>
+                        <div style="text-align:center"><div style="font-size:0.7rem; color:#888;">AWAY</div><div class="score-val" style="color:#ff4444">${scene.data.awayScore}</div></div>
+                    </div>`;
                     break;
             }
 
-            // Inject the HTML
             el.innerHTML = `
-                <div class="scene-header">
-                    <span>CUE #${index + 1}: ${scene.description}</span>
-                    <span class="mode-badge">MODE: ${scene.data.mode} (${modeName})</span>
-                </div>
-                <div class="data-display">
-                    <pre class="json-block">${JSON.stringify(scene.data, null, 2)}</pre>
-                    ${visualHtml}
-                </div>
+                <div class="scene-header"><span>CUE #${index + 1}: ${scene.description}</span><span style="font-size:0.7rem; background:#444; padding:2px 4px;">${modeName}</span></div>
+                <div class="data-display"><pre class="json-block">${JSON.stringify(scene.data, null, 2)}</pre>${visualHtml}</div>
             `;
             container.appendChild(el);
         });
+        
+        // Initial UI State
+        updateConnectionUI(false);
     }
 
-    // --- 3. NAVIGATION LOGIC ---
     function updateUI() {
         document.querySelectorAll('.scene-card').forEach(el => el.classList.remove('active'));
-
         if (currentIndex >= 0 && currentIndex < scenes.length) {
             const activeEl = document.getElementById(`scene-${currentIndex}`);
             if (activeEl) {
@@ -410,45 +417,28 @@
     }
 
     function nextScene() {
-        if (currentIndex < scenes.length - 1) {
-            currentIndex++;
-            updateUI();
-        }
+        if (currentIndex < scenes.length - 1) { currentIndex++; updateUI(); }
     }
-
     function prevScene() {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateUI();
-        }
+        if (currentIndex > 0) { currentIndex--; updateUI(); }
     }
 
-    // --- 4. KEYBOARD SHORTCUTS ---
     document.addEventListener('keydown', (e) => {
-        if (e.code === "Space" || e.code === "ArrowRight") {
-            e.preventDefault(); 
-            nextScene();
-        } else if (e.code === "ArrowLeft") {
-            prevScene();
-        }
+        if (e.code === "Space" || e.code === "ArrowRight") { e.preventDefault(); nextScene(); } 
+        else if (e.code === "ArrowLeft") { prevScene(); }
     });
 
-    // --- 5. PLACEHOLDER METHOD ---
+    // --- 5. TRIGGER LOGIC ---
     function onSceneChange(newScene) {
-        console.log("--- SCENE CHANGE DETECTED ---");
-        console.log("Sending to scoreboard:", newScene);
+        // Construct the JSON payload for the scoreboard
+        const jsonPayload = JSON.stringify({ scene: newScene, index: -1 });
         
-        // Example: logic to handle specific modes
-        if(newScene.mode === ScoreboardMode.OFF) {
-            console.log(">> CUT POWER <<");
-        }
-        if(newScene.mode === ScoreboardMode.FIREWORKS_DISPLAY) {
-            console.log(">> CUE FIREWORKS <<");
-        }
+        // Send command via Serial
+        sendCommand('SET_SCENE_FROM_JSON', jsonPayload);
     }
 
     init();
-</script>
 
+</script>
 </body>
 </html>
