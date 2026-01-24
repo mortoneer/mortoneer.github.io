@@ -1,5 +1,13 @@
 /**
- * build_flags = 
+  1. For remote debugging with chrome on phone, install 
+  https://developer.android.com/tools/releases/platform-tools
+  2. enable dev mode
+  3. android > system > developer options > wireless debugging
+  4. then .\adb.exe pair 192.168.4.23:39611
+  5. then open (on laptop) chrome://inspect/#devices
+  6. then open a tab in chrome on phone
+
+ build_flags = 
     -D ARDUINO_USB_CDC_ON_BOOT=1
     -D ARDUINO_USB_MODE=1 
  */
