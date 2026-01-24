@@ -1,3 +1,9 @@
+/**
+ * build_flags = 
+    -D ARDUINO_USB_CDC_ON_BOOT=1
+    -D ARDUINO_USB_MODE=1 
+ */
+
 import { serial } from 'https://cdn.jsdelivr.net/npm/web-serial-polyfill@1.0.15/dist/serial.js';
 
 // --- 1. CONFIGURATION & DATA ---
