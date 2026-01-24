@@ -1,0 +1,327 @@
+:root {
+    --bg-color: #1a1a1a;
+    --card-bg: #2d2d2d;
+    --text-color: #e0e0e0;
+    --accent-color: #ffcc00;
+    --highlight-color: #2ecc71;
+    --error-color: #e74c3c;
+    --input-bg: #444;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding-bottom: 140px;
+}
+
+/* --- HEADER & CONNECTION PANEL --- */
+header {
+    background-color: #000;
+    padding: 15px;
+    border-bottom: 2px solid var(--accent-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.connection-panel {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    background: #222;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.device-select {
+    background-color: var(--accent-color);
+    color: #000;
+    font-weight: bold;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input {
+    background: var(--input-bg);
+    border: 1px solid #666;
+    color: white;
+    padding: 8px;
+    font-family: inherit;
+    border-radius: 4px;
+    width: 140px;
+    font-size: 0.85rem;
+}
+
+.btn-conn {
+    padding: 8px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    border: none;
+}
+
+.btn-connect {
+    background-color: var(--highlight-color);
+    color: #000;
+}
+
+.btn-disconnect {
+    background-color: var(--error-color);
+    color: #fff;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.status-dot {
+    height: 12px;
+    width: 12px;
+    background-color: #555;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot.connected {
+    background-color: var(--highlight-color);
+    box-shadow: 0 0 8px var(--highlight-color);
+}
+
+/* --- SCENE LIST --- */
+#scene-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 10px;
+}
+
+.scene-card {
+    background-color: var(--card-bg);
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 5px solid #555;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+}
+
+.scene-card.active {
+    opacity: 1;
+    transform: scale(1.02);
+    border-left: 8px solid var(--highlight-color);
+    background-color: #383838;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.scene-header {
+    font-weight: bold;
+    color: var(--accent-color);
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* --- VISUAL MODES --- */
+.visual-summary {
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    min-height: 80px;
+}
+
+/* Mode 0: Game */
+.visual-summary.mode-0 {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #222;
+}
+
+.score-val {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.clock-val {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    border: 2px solid #555;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* Mode 1: Victory */
+.visual-summary.mode-1 {
+    background: linear-gradient(135deg, #2c3e50, #c0392b);
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    border: 2px solid #e74c3c;
+    animation: pulse 2s infinite;
+}
+
+.victory-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 10px #f1c40f;
+}
+
+/* Mode 2: Clock */
+.visual-summary.mode-2 {
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.visual-summary.mode-2 .clock-val {
+    font-size: 2.5rem;
+    border: none;
+    color: #fff;
+}
+
+/* Mode 4: OFF */
+.visual-summary.mode-4 {
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed #444;
+}
+
+.offline-text {
+    color: #333;
+    font-family: monospace;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.json-block {
+    background: #111;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    overflow-x: auto;
+    border: 1px solid #333;
+    margin: 0;
+}
+
+/* --- CONTROLS FOOTER --- */
+#controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    border-top: 2px solid #444;
+    z-index: 1000;
+}
+
+.btn-nav {
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+}
+
+#btn-prev {
+    background-color: #555;
+    color: white;
+}
+
+#btn-next {
+    background-color: var(--highlight-color);
+    color: black;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+    }
+}
+
+#sidebar-controls {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    /* Center vertically */
+    width: 120px;
+    background: #222;
+    border: 1px solid #444;
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+}
+
+.sidebar-title {
+    font-size: 0.7rem;
+    color: #888;
+    text-align: center;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.btn-side {
+    padding: 10px 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.1s;
+}
+
+.btn-side:active {
+    transform: scale(0.95);
+}
+
+.btn-on {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* Red */
+.btn-rainbow {
+    background: linear-gradient(90deg, #e74c3c, #f1c40f, #2ecc71, #3498db);
+    color: white;
+    text-shadow: 0 0 2px black;
+}
+
+.btn-off {
+    background-color: #333;
+    color: #aaa;
+    border: 1px solid #555;
+}

@@ -521,34 +521,6 @@
             }
         }
 
-        async function sendCommand(command, data) {
-            if (!port || !port.writable) {
-                log('TX Failed: Not Connected', true);
-                return;
-            }
-
-            writer = port.writable.getWriter();
-            const macAddress = document.getElementById('macAddressInput').value;
-            const eventType = document.getElementById('eventTypeInput').value;
-
-            // Protocol: RELAY | MAC | EVENT | COMMAND | DATA
-            let message = `RELAY|${macAddress}|${eventType}|${command}`;
-            if (data !== undefined && data !== null && data !== '') {
-                message += `|${data}`;
-            }
-            message += '\n';
-
-            const textEncoder = new TextEncoder();
-            try {
-                await writer.write(textEncoder.encode(message));
-                log('TX: ' + command);
-            } catch (error) {
-                log('TX Error: ' + error.message, true);
-            } finally {
-                writer.releaseLock();
-            }
-        }
-
         function updateConnectionUI(isConnected) {
             const dot = document.getElementById('connection-status');
             const btnCon = document.getElementById('btnConnect');
