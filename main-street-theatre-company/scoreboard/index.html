@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSM Scoreboard</title>
+    <title>High School Musical</title>
     <style>
         :root {
             --bg-color: #1a1a1a;
@@ -280,7 +280,7 @@
             top: 50%;
             transform: translateY(-50%);
             /* Center vertically */
-            width: 120px;
+            width: 200px;
             background: #222;
             border: 1px solid #444;
             border-left: none;
@@ -302,7 +302,7 @@
         }
 
         .btn-side {
-            padding: 10px 5px;
+            padding: 30px 5px;
             font-size: 0.8rem;
             font-weight: bold;
             border: none;
@@ -339,7 +339,7 @@
 <body>
 
     <header>
-        <div style="font-size: 1.5rem; font-weight: bold;">HSM SCENE 10</div>
+        <div style="font-size: 1.5rem; font-weight: bold;">High School Musical</div>
 
         <div class="connection-panel">
             <span id="connection-status" class="status-dot"></span>
@@ -373,7 +373,9 @@
 
     <script>
         // --- 1. CONFIGURATION & DATA ---
-        const ScoreboardMode = { BASKET_BALL_GAME: 0, FIREWORKS_DISPLAY: 1, CLOCK_ONLY: 2, COUNTDOWN: 3, OFF: 4, MELTDOWN: 5 };
+        const ScoreboardMode = {
+            BASKET_BALL_GAME: 0, FIREWORKS_DISPLAY: 1, CLOCK_ONLY: 2, COUNTDOWN: 3, OFF: 4, MELTDOWN: 5
+        };
 
         const scenes = [
             { description: "Show Start. OFF", data: { "homeScore": 0, "awayScore": 0, "homeFouls": 0, "awayFouls": 0, "quarter": 0, "clockMinutes": 0, "clockSeconds": 0, "mode": 4, "clockRunning": false }, "index": 0 },
@@ -391,7 +393,7 @@
             { description: "Off", data: { "homeScore": 0, "awayScore": 0, "homeFouls": 0, "awayFouls": 0, "quarter": 0, "clockMinutes": 0, "clockSeconds": 0, "mode": 4, "clockRunning": false }, "index": 12 },
 
             { description: "COACH: You have 10 minutes.", data: { "homeScore": 0, "awayScore": 0, "homeFouls": 0, "awayFouls": 0, "quarter": 0, "clockMinutes": 10, "clockSeconds": 0, "mode": 2, "clockRunning": true }, "index": 13 },
-            { description: "Music Starts - 3 minutes - GET YOUR HEAD IN THE GAME", data: { "homeScore": 0, "awayScore": 0, "homeFouls": 0, "awayFouls": 0, "quarter": 0, "clockMinutes": 3, "clockSeconds": 0, "mode": 2, "clockRunning": true }, "index": 13 },
+            { description: "Music Starts - 3 minutes - GET YOUR HEAD IN THE GAME", data: { "homeScore": 0, "awayScore": 0, "homeFouls": 0, "awayFouls": 0, "quarter": 0, "clockMinutes": 2, "clockSeconds": 50, "mode": 2, "clockRunning": true }, "index": 13 },
             { description: "OFF", data: { "homeScore": 0, "awayScore": 0, "homeFouls": 0, "awayFouls": 0, "quarter": 0, "clockMinutes": 0, "clockSeconds": 0, "mode": 4, "clockRunning": false }, "index": 14 },
 
             { description: "1 RYAN: Right. Umm. What are the rules again?", data: { "homeScore": 1, "awayScore": 1, "homeFouls": 0, "awayFouls": 0, "quarter": 1, "clockMinutes": 8, "clockSeconds": 0, "mode": ScoreboardMode.COUNTDOWN, "clockRunning": false }, "index": 15 },
@@ -399,11 +401,14 @@
             { description: "3 RYAN: Right. Umm. What are the rules again?", data: { "homeScore": 3, "awayScore": 3, "homeFouls": 0, "awayFouls": 0, "quarter": 1, "clockMinutes": 8, "clockSeconds": 0, "mode": ScoreboardMode.COUNTDOWN, "clockRunning": false }, "index": 15 },
             { description: "4 RYAN: Right. Umm. What are the rules again?", data: { "homeScore": 4, "awayScore": 4, "homeFouls": 0, "awayFouls": 0, "quarter": 1, "clockMinutes": 8, "clockSeconds": 0, "mode": ScoreboardMode.COUNTDOWN, "clockRunning": false }, "index": 15 },
             { description: "5 RYAN: Right. Umm. What are the rules again?", data: { "homeScore": 5, "awayScore": 5, "homeFouls": 0, "awayFouls": 0, "quarter": 1, "clockMinutes": 8, "clockSeconds": 0, "mode": ScoreboardMode.COUNTDOWN, "clockRunning": false }, "index": 15 },
-            { description: "INTERMISSION OFF", data: { "homeScore": 0, "awayScore": 0, "homeFouls": 0, "awayFouls": 0, "quarter": 0, "clockMinutes": 0, "clockSeconds": 0, "mode": ScoreboardMode.OFF, "clockRunning": false }, "index": 14 },
+            { description: "OFF for Status Quo", data: { "homeScore": 0, "awayScore": 0, "homeFouls": 0, "awayFouls": 0, "quarter": 0, "clockMinutes": 0, "clockSeconds": 0, "mode": ScoreboardMode.OFF, "clockRunning": false }, "index": 14 },
+            
+            { description: "INTERMISSION OFF", data: { 
+                "homeScore": 0, "awayScore": 0, "homeFouls": 0, "awayFouls": 0, 
+                "quarter": 0, "clockMinutes": 15, "clockSeconds": 0, "mode": ScoreboardMode.CLOCK_ONLY, "clockRunning": true 
+            }, "index": 14 },
 
-            // { description: "INTERMISSION", data:{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":15,"clockSeconds":0,"mode":ScoreboardMode.CLOCK_ONLY,"clockRunning":true},"index":16},
-            // { description: "OFF - Start of ACT 2", data:{"homeScore":0,"awayScore":0,"homeFouls":0,"awayFouls":0,"quarter":0,"clockMinutes":0,"clockSeconds":0,"mode":ScoreboardMode.OFF,"clockRunning":false},"index":14},
-
+            { description: "Act 2 Start OFF", data: { "homeScore": 0, "awayScore": 0, "homeFouls": 0, "awayFouls": 0, "quarter": 0, "clockMinutes": 0, "clockSeconds": 0, "mode": ScoreboardMode.OFF, "clockRunning": false }, "index": 14 },
             { description: "See Coach - Drills - Act 2 Scene 4", data: { "homeScore": 0, "awayScore": 0, "homeFouls": 0, "awayFouls": 0, "quarter": 0, "clockMinutes": 0, "clockSeconds": 45, "mode": ScoreboardMode.CLOCK_ONLY, "clockRunning": true }, "index": 13 },
             { description: "OFF", data: { "homeScore": 0, "awayScore": 0, "homeFouls": 0, "awayFouls": 0, "quarter": 0, "clockMinutes": 0, "clockSeconds": 0, "mode": ScoreboardMode.OFF, "clockRunning": false }, "index": 14 },
 
@@ -416,7 +421,7 @@
             { description: "6. Boltons in the lane. he shoots. he scores.", data: { "homeScore": 66, "awayScore": 68, "homeFouls": 4, "awayFouls": 4, "quarter": 4, "clockMinutes": 1, "clockSeconds": 30, "mode": 0, "clockRunning": true } },
 
             // POWER OUTAGE
-            { description: "MELTDOWN", data: { "homeScore": 66, "awayScore": 68, "homeFouls": 4, "awayFouls": 4, "quarter": 4, "clockMinutes": 1, "clockSeconds": 30, "mode": 5, "clockRunning": false } },
+            // { description: "MELTDOWN", data: { "homeScore": 66, "awayScore": 68, "homeFouls": 4, "awayFouls": 4, "quarter": 4, "clockMinutes": 1, "clockSeconds": 30, "mode": 5, "clockRunning": false } },
             { description: "BLACKOUT (Power Outage)", data: { "homeScore": 66, "awayScore": 68, "homeFouls": 4, "awayFouls": 4, "quarter": 4, "clockMinutes": 1, "clockSeconds": 30, "mode": 4, "clockRunning": false } },
 
             // RESUME
