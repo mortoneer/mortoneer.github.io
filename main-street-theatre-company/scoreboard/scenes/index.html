@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High School Musical</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <header>
+        <div style="font-size: 1.5rem; font-weight: bold;">High School Musical</div>
+
+        <div class="connection-panel">
+            <span id="connection-status" class="status-dot"></span>
+
+            <select id="targetDevice" class="device-select">
+                <option value="scoreboard">Main Scoreboard</option>
+                <option value="onAirSign">On Air Sign</option>
+            </select>
+
+            <label>MAC: <input type="text" id="macAddressInput" readonly></label>
+            <label>Event: <input type="text" id="eventTypeInput" readonly></label>
+
+            <button id="btnConnect" class="btn-conn btn-connect">Connect Serial</button>
+            <button id="btnDisconnect" class="btn-conn btn-disconnect">Disconnect</button>
+        </div>
+    </header>
+
+    <div id="scene-container"></div>
+
+    <div id="controls">
+        <button id="btn-prev" class="btn-nav">&#8592; PREV</button>
+        <button id="btn-next" class="btn-nav">NEXT (Space) &#8594;</button>
+    </div>
+
+    <div id="sidebar-controls">
+        <div class="sidebar-title">ON AIR SIGN</div>
+        <button 
+            id="sendOnAirOn"
+            data-mac="8c:4f:00:3c:dd:2c" 
+            data-event="ON_AIR_SIGN"
+            data-data="ON"
+            class="btn-side btn-on"
+        >ON</button>
+        <button 
+            id="sendOnAirRainbow"
+            data-mac="8c:4f:00:3c:dd:2c" 
+            data-event="ON_AIR_SIGN"
+            data-data="RAINBOW"
+            class="btn-side btn-rainbow"
+        >RAINBOW</button>
+        <button 
+            id="sendOnAirOff"
+            data-mac="8c:4f:00:3c:dd:2c" 
+            data-event="ON_AIR_SIGN"
+            data-data="OFF"
+            class="btn-side btn-off"
+        >OFF</button>
+    </div>
+
+    <div id="sidebar-controls-right">
+        <div class="sidebar-title">Bubbles!</div>
+        <button 
+            data-mac="3c:8a:1f:9b:c1:b4" 
+            data-event="BUBBLES"
+            data-data="START_BLOWING"
+            class="btn-side btn-on sender"
+        >ON</button>
+        <button 
+            data-mac="3c:8a:1f:9b:c1:b4" 
+            data-event="BUBBLES"
+            data-data="STOP_BLOWING"
+            class="btn-side btn-off sender"
+        >OFF</button>
+        <div class="sidebar-title">50 / 50</div>
+        <input class="btn-side" id="fiftyfifty" type="number">
+        <input class="btn-side" type="button" value="50 50" id="fiftyfiftygo">
+    </div>
+
+    <script type="module" src="./index.mjs"></script>
+</body>
+
+</html>
