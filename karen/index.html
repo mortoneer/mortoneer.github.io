@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karen LED Controller</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header>
+        <div class="title">Karen LED Controller</div>
+        <div class="connection-panel">
+            <button id="loginBtn" class="btn-login">Login with Google</button>
+            <span id="userEmail" class="user-email"></span>
+            <span id="status" class="status-dot"></span>
+            <label>MAC: <input type="text" id="macAddress" value="XX:XX:XX:XX:XX:XX" readonly></label>
+            <button id="btnConnect" class="btn-connect">Connect</button>
+            <button id="btnDisconnect" class="btn-disconnect">Disconnect</button>
+        </div>
+    </header>
+
+    <main id="app"></main>
+
+    <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAFwt5RmnsEeFMOfO1NW_nce6eDz26QQF8",
+        authDomain: "karen-computer.firebaseapp.com",
+        projectId: "karen-computer",
+        storageBucket: "karen-computer.firebasestorage.app",
+        messagingSenderId: "173718178900",
+        appId: "1:173718178900:web:5b576f39b549bf61f271c1",
+        databaseURL: "https://karen-computer-default-rtdb.firebaseio.com"
+    };
+
+    // Initialize Firebase and expose to app
+    window.firebaseApp = initializeApp(firebaseConfig);
+    const auth = getAuth(window.firebaseApp);
+    const provider = new GoogleAuthProvider();
+
+    // Login
+    document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
+
+    // Auth state
+    onAuthStateChanged(auth, (user) => {
+      window.currentUser = user;
+      if (user) {
+        document.getElementById('loginBtn').style.display = 'none';
+        document.getElementById('userEmail').textContent = user.email;
+        document.getElementById('userEmail').style.display = 'inline';
+        console.log('[Auth] Logged in:', user.email);
+      } else {
+        document.getElementById('loginBtn').style.display = 'inline';
+        document.getElementById('userEmail').style.display = 'none';
+      }
+    });
+    </script>
+    <script type="module" src="./app.mjs"></script>
+</body>
+</html>
