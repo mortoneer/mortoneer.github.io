@@ -4,7 +4,7 @@ import { SceneManager } from './scenes.mjs';
 import { initFirebase, saveToFirebase } from './firebase.mjs';
 import { createBuiltInPanel, createCharacterPanel, createScenePanel } from './ui.mjs';
 
-const MAC_ADDRESS = 'XX:XX:XX:XX:XX:XX'; // Replace with actual Karen LED MAC
+const MAC_ADDRESS = '8C:4F:00:30:60:9C'; // Replace with actual Karen LED MAC
 const serial = new SerialManager();
 const sceneManager = new SceneManager();
 

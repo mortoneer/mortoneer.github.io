@@ -1,7 +1,7 @@
 import { SerialManager } from './serial.mjs';
 import { SceneManager } from './scenes.mjs';
 
-const MAC_ADDRESS = 'XX:XX:XX:XX:XX:XX';
+const MAC_ADDRESS = '8C:4F:00:30:60:9C';
 const serial = new SerialManager();
 const sceneManager = new SceneManager();
 const scenes = sceneManager.getAll();
