@@ -52,13 +52,7 @@ async function activateScene(scene) {
   const action = scene.actions[0];
   
   try {
-    if (action.state.includes('_')) {
-      // Custom state
-      await serial.send(MAC_ADDRESS, 'KAREN', `ACTIVATE|${action.state}`);
-    } else {
-      // Built-in state
-      await serial.send(MAC_ADDRESS, 'KAREN', action.state);
-    }
+    await serial.send(MAC_ADDRESS, 'KAREN', `ACTIVATE|${action.state}`);
     console.log(`[Show] Scene ${currentIndex + 1}: ${scene.name}`);
   } catch (err) {
     console.error('Send failed:', err);

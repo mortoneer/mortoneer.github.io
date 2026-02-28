@@ -31,12 +31,19 @@ export class SceneManager {
     this.save();
   }
 
+  /**
+   * 
+   * @param {string} sceneName cue You should be listening for this line or watching for this action.
+   * @param {string} action Trigger this action AFTER you see or hear the cue. ie. LISTENING_TO_MERMAID
+   */
   addAction(sceneName, action) {
-    const scene = this.scenes.find(s => s.name === sceneName);
-    if (scene) {
-      scene.actions = [action]; // Replace with single action
-      this.save();
+    let scene = this.scenes.find(s => s.name === sceneName);
+    if (!scene) {
+      scene = this.create(sceneName);
     }
+
+    scene.actions = [action]; // Replace with single action
+    this.save();
   }
 
   removeAction(sceneName, index) {
