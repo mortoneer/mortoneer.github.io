@@ -9,9 +9,19 @@ const serial = new SerialManager();
 const sceneManager = new SceneManager();
 
 // Initialize Firebase (get app from global scope)
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
   if (window.firebaseApp) {
     initFirebase(window.firebaseApp);
+  }
+  
+  // Try to auto-connect to serial
+  try {
+    if (await serial.autoConnect()) {
+      updateConnectionStatus(true);
+      console.log('Auto-connected to serial port');
+    }
+  } catch (err) {
+    console.error('Auto-connect failed:', err);
   }
 });
 

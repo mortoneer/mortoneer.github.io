@@ -284,6 +284,16 @@ button {
   padding: 5px 15px;
 }
 
+.btn-up, .btn-down {
+  background: #444;
+  color: #fff;
+  padding: 5px 10px;
+}
+
+.btn-up:hover, .btn-down:hover {
+  background: #666;
+}
+
 .btn-delete {
   background: #a00;
   color: #fff;

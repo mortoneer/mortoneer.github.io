@@ -180,6 +180,8 @@ export function createScenePanel(sceneManager, onPlay, onSave) {
       header.className = 'scene-header';
       header.innerHTML = `
         <span class="scene-name">${scene.name}</span>
+        <button class="btn-up" data-scene="${scene.name}">↑</button>
+        <button class="btn-down" data-scene="${scene.name}">↓</button>
         <button class="btn-play" data-scene="${scene.name}">▶</button>
         <button class="btn-delete" data-scene="${scene.name}">✕</button>
       `;
@@ -203,6 +205,16 @@ export function createScenePanel(sceneManager, onPlay, onSave) {
   }
   
   list.addEventListener('click', (e) => {
+    if (e.target.classList.contains('btn-up')) {
+      const name = e.target.dataset.scene;
+      sceneManager.moveUp(name);
+      renderScenes();
+    }
+    if (e.target.classList.contains('btn-down')) {
+      const name = e.target.dataset.scene;
+      sceneManager.moveDown(name);
+      renderScenes();
+    }
     if (e.target.classList.contains('btn-play')) {
       const name = e.target.dataset.scene;
       onPlay(sceneManager.getAll().find(s => s.name === name));

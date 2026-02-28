@@ -7,6 +7,18 @@ const sceneManager = new SceneManager();
 const scenes = sceneManager.getAll();
 let currentIndex = 0;
 
+// Auto-connect
+window.addEventListener('load', async () => {
+  try {
+    if (await serial.autoConnect()) {
+      updateConnectionStatus(true);
+      console.log('Auto-connected to serial port');
+    }
+  } catch (err) {
+    console.error('Auto-connect failed:', err);
+  }
+});
+
 // Connection
 document.getElementById('btnConnect').onclick = async () => {
   try {

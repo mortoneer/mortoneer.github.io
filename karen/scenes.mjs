@@ -31,6 +31,24 @@ export class SceneManager {
     this.save();
   }
 
+  moveUp(name) {
+    const index = this.scenes.findIndex(s => s.name === name);
+    if (index > 0) {
+      const scene = this.scenes.splice(index, 1)[0];
+      this.scenes.splice(index - 1, 0, scene);
+      this.save();
+    }
+  }
+
+  moveDown(name) {
+    const index = this.scenes.findIndex(s => s.name === name);
+    if (index !== -1 && index < this.scenes.length - 1) {
+      const scene = this.scenes.splice(index, 1)[0];
+      this.scenes.splice(index + 1, 0, scene);
+      this.save();
+    }
+  }
+
   /**
    * 
    * @param {string} sceneName cue You should be listening for this line or watching for this action.

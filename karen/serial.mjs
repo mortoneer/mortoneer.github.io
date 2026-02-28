@@ -8,9 +8,23 @@ export class SerialManager {
 
   async connect() {
     this.port = await navigator.serial.requestPort();
+    await this.open();
+    return true;
+  }
+
+  async autoConnect() {
+    const ports = await navigator.serial.getPorts();
+    if (ports.length > 0) {
+      this.port = ports[0];
+      await this.open();
+      return true;
+    }
+    return false;
+  }
+
+  async open() {
     await this.port.open({ baudRate: 115200 });
     this.writer = this.port.writable.getWriter();
-    return true;
   }
 
   async disconnect() {
