@@ -38,6 +38,11 @@
         <div class="hint">← PREV | SPACE/→ NEXT</div>
     </div>
 
+    <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+    </script>
     <script type="module" src="./show.mjs"></script>
 </body>
 </html>

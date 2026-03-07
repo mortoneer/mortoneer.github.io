@@ -4,11 +4,20 @@ import { SceneManager } from './scenes.mjs';
 const MAC_ADDRESS = '8C:4F:00:30:60:9C';
 const serial = new SerialManager();
 const sceneManager = new SceneManager();
-const scenes = sceneManager.getAll();
+let scenes = [];
 let currentIndex = 0;
 
 // Auto-connect
 window.addEventListener('load', async () => {
+  await sceneManager.load();
+  scenes = sceneManager.getAll();
+  
+  if (scenes.length > 0) {
+    goToScene(0);
+  } else {
+    render();
+  }
+  
   try {
     if (await serial.autoConnect()) {
       updateConnectionStatus(true);
@@ -136,11 +145,4 @@ function render() {
     item.onclick = () => goToScene(i);
     list.appendChild(item);
   });
-}
-
-// Initialize
-if (scenes.length > 0) {
-  goToScene(0);
-} else {
-  render();
 }

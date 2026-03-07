@@ -1,0 +1,149 @@
+{
+  "karen": {
+    "scenes": {
+      "scenes": [
+        {
+          "name": "Start of show",
+          "actions": [{ "type": "activate", "state": "OFF" }]
+        },
+        {
+          "name": "Listen to Snow White after 'Lucky' / Silence as the dream ends / ACT I, SC. 3 [p. 20]",
+          "actions": [{ "type": "activate", "state": "LISTENING_TO_SNOW_WHITE" }]
+        },
+        {
+          "name": "Yell at Snow White: 'Snow White, to the Huntsman scene!' / ACT I, SC. 3 [p. 20]",
+          "actions": [{ "type": "activate", "state": "YELLING_AT_SNOW_WHITE" }]
+        },
+        {
+          "name": "OFF / The princesses exit / ACT I, SC. 3 [p. 20]",
+          "actions": [{ "type": "activate", "state": "OFF" }]
+        },
+        {
+          "name": "Listen to Snow White after FG: '...did I?' / ACT I, SC. 3A [p. 22]",
+          "actions": [{ "type": "activate", "state": "LISTENING_TO_SNOW_WHITE" }]
+        },
+        {
+          "name": "Yell at Snow White: 'Ok, from Snow’s chase...' / ACT I, SC. 3A [p. 22]",
+          "actions": [{ "type": "activate", "state": "YELLING_AT_SNOW_WHITE" }]
+        },
+        {
+          "name": "OFF / OFG turns off intercom / ACT I, SC. 3A [p. 22]",
+          "actions": [{ "type": "activate", "state": "OFF" }]
+        },
+        {
+          "name": "Listen to Cinderella after 'tough time to immigrate' / ACT I, SC. 3A [p. 25]",
+          "actions": [{ "type": "activate", "state": "LISTENING_TO_CINDERELLA" }]
+        },
+        {
+          "name": "Yell at Cinderella: 'Cinderella!' / ACT I, SC. 3A [p. 25]",
+          "actions": [{ "type": "activate", "state": "YELLING_AT_CINDERELLA" }]
+        },
+        {
+          "name": "Listen to Cinderella: 'Coming!' / ACT I, SC. 3A [p. 25]",
+          "actions": [{ "type": "activate", "state": "LISTENING_TO_CINDERELLA" }]
+        },
+        {
+          "name": "OFF / Cinderella hurries off / ACT I, SC. 3A [p. 25]",
+          "actions": [{ "type": "activate", "state": "OFF" }]
+        },
+        {
+          "name": "Listen to Cinderella / Lights up / ACT I, SC. 4 [p. 27]",
+          "actions": [{ "type": "activate", "state": "LISTENING_TO_CINDERELLA" }]
+        },
+        {
+          "name": "Talk to Cinderella: 'Ok! Scene 8... Here we go!' / ACT I, SC. 4 [p. 27]",
+          "actions": [{ "type": "activate", "state": "TALKING_TO_CINDERELLA" }]
+        },
+        {
+          "name": "OFF / After Betany says 'Go to the ball?' / ACT I, SC. 4 [p. 27]",
+          "actions": [{ "type": "activate", "state": "OFF" }]
+        },
+        {
+          "name": "Listen to Snow White / '...in Scroll Club' / ACT I, SC. 5 [p. 33]",
+          "actions": [{ "type": "activate", "state": "LISTENING_TO_SNOW_WHITE" }]
+        },
+        {
+          "name": "Talk to Snow White: 'Snow White?' / ACT I, SC. 5 [p. 33]",
+          "actions": [{ "type": "activate", "state": "TALKING_TO_SNOW_WHITE" }]
+        },
+        {
+          "name": "Listen to Snow White (waiting) / ACT I, SC. 5 [p. 33]",
+          "actions": [{ "type": "activate", "state": "LISTENING_TO_SNOW_WHITE" }]
+        },
+        {
+          "name": "Yell at Snow White: 'Snow White!' / After Cinderella says 'Don't!' / ACT I, SC. 5 [p. 33]",
+          "actions": [{ "type": "activate", "state": "YELLING_AT_SNOW_WHITE" }]
+        },
+        {
+          "name": "Listen to Snow White / Snow says: '...yes?' / ACT I, SC. 5 [p. 33]",
+          "actions": [{ "type": "activate", "state": "LISTENING_TO_SNOW_WHITE" }]
+        },
+        {
+          "name": "Talk to Snow White: 'Do you know where Cinderella is?' / ACT I, SC. 5 [p. 33]",
+          "actions": [{ "type": "activate", "state": "TALKING_TO_SNOW_WHITE" }]
+        },
+        {
+          "name": "Listen to Snow White / Snow lies / ACT I, SC. 5 [p. 33]",
+          "actions": [{ "type": "activate", "state": "LISTENING_TO_SNOW_WHITE" }]
+        },
+        {
+          "name": "Talk to Snow White: 'Happy ever after isn't a birthright.' / ACT I, SC. 5 [p. 33]",
+          "actions": [{ "type": "activate", "state": "TALKING_TO_SNOW_WHITE" }]
+        },
+        {
+          "name": "Listen to Snow White / Final cue / ACT I, SC. 5 [p. 33]",
+          "actions": [{ "type": "activate", "state": "LISTENING_TO_SNOW_WHITE" }]
+        },
+        {
+          "name": "Talk to Snow White: 'Ok, ready to rehearse the ball scene... here we go!' / After 'Let's go' / ACT I, SC. 5 [p. 35]",
+          "actions": [{ "type": "activate", "state": "TALKING_TO_SNOW_WHITE" }]
+        },
+        {
+          "name": "OFF / Snow hangs up / ACT I, SC. 5 [p. 35]",
+          "actions": [{ "type": "activate", "state": "OFF" }]
+        },
+        {
+          "name": "Listen to Belle / 'Can you all keep a secret?' / ACT I, SC. 7 [p. 55]",
+          "actions": [{ "type": "activate", "state": "LISTENING_TO_BELLE" }]
+        },
+        {
+          "name": "Talk to Belle: 'Hansel and Gretel to the gingerbread house' / ACT I, SC. 7 [p. 55]",
+          "actions": [{ "type": "activate", "state": "TALKING_TO_BELLE" }]
+        },
+        {
+          "name": "Listen to Belle: 'Oh ho yeah' / ACT I, SC. 7 [p. 55]",
+          "actions": [{ "type": "activate", "state": "LISTENING_TO_BELLE" }]
+        },
+        {
+          "name": "OFF / 'These poor children' / ACT I, SC. 7 [p. 55]",
+          "actions": [{ "type": "activate", "state": "OFF" }]
+        },
+        {
+          "name": "Listen to Cinderella / 'There she is Princess Fancy Pants' / ACT I, SC. 8 [p. 63]",
+          "actions": [{ "type": "activate", "state": "LISTENING_TO_CINDERELLA" }]
+        },
+        {
+          "name": "Yell at Cinderella: 'Cinderella!' / Top of dressmaker scene / ACT I, SC. 8 [p. 63]",
+          "actions": [{ "type": "activate", "state": "YELLING_AT_CINDERELLA" }]
+        },
+        {
+          "name": "OFF / After Narrator's line / ACT I, SC. 8 [p. 63]",
+          "actions": [{ "type": "activate", "state": "OFF" }]
+        },
+        {
+          "name": "Listen to General Red / 'Where are the girls?!?' / ACT II, SC. 4 [p. 110]",
+          "actions": [{ "type": "activate", "state": "TALKING_GENERAL_RED" }]
+        },
+        {
+          "name": "Talk to Cinderella / '...be at the palace by — shall we say midnight?' / ACT II, SC. 4 [p. 110]",
+          "actions": [{ "type": "activate", "state": "TALKING_TO_CINDERELLA" }]
+        },
+        {
+          "name": "OFF / Sound FX: 'Click.' / ACT II, SC. 4 [p. 110]",
+          "actions": [{ "type": "activate", "state": "OFF" }]
+        }
+      ],
+      "timestamp": 1872899003761
+    }
+  }
+}

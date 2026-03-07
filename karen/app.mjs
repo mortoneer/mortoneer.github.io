@@ -6,13 +6,17 @@ import { createBuiltInPanel, createCharacterPanel, createScenePanel } from './ui
 
 const MAC_ADDRESS = '8C:4F:00:30:60:9C';
 const serial = new SerialManager();
-const sceneManager = new SceneManager();
+const sceneManager = new SceneManager(saveToFirebase);
 
 // Initialize Firebase (get app from global scope)
 window.addEventListener('load', async () => {
+  await sceneManager.load();
+  
   if (window.firebaseApp) {
-    initFirebase(window.firebaseApp);
+    initFirebase(window.firebaseApp, sceneManager);
   }
+  
+  render();
   
   // Try to auto-connect to serial
   try {
@@ -94,7 +98,7 @@ function render() {
   app.innerHTML = '';
   
   // Scene panel with save callback
-  app.appendChild(createScenePanel(sceneManager, playScene, () => sceneManager.saveToFirebase(saveToFirebase)));
+  app.appendChild(createScenePanel(sceneManager, playScene, () => sceneManager.save()));
   
   // Built-in states
   app.appendChild(createBuiltInPanel(builtInStates, activateBuiltIn, addToScene));
@@ -118,8 +122,6 @@ document.addEventListener('click', (e) => {
 window.addEventListener('scenes-updated', render);
 const states = characters.flatMap(c=>c.states);
 window.createAllStates = () => states.map((s,i) => setTimeout(()=>{createState(s)}, i * 500));
-
-render();
 
 // function createScene(cue, stateName) {
 //   const action = { type: 'activate', state: stateName };

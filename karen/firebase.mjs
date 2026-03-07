@@ -3,25 +3,39 @@ import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebase
 
 let db = null;
 
-export function initFirebase(app) {
+export function initFirebase(app, sceneManager) {
   db = getDatabase(app);
   
-  // Load scenes from Firebase on init
   onValue(ref(db, 'karen/scenes'), (snapshot) => {
-    const data = snapshot.val();
-    if (data) {
-      console.log('[Firebase] Loaded scenes:', data);
-      localStorage.setItem('karen-scenes', JSON.stringify(data));
-      // Trigger re-render if needed
+    const firebaseData = snapshot.val();
+    if (!firebaseData) return;
+    
+    const localData = localStorage.getItem('karen-scenes');
+    const local = localData ? JSON.parse(localData) : { scenes: [], timestamp: 0 };
+    
+    if (firebaseData.timestamp > local.timestamp) {
+      console.log('[Firebase] Remote is newer, updating local');
+      localStorage.setItem('karen-scenes', JSON.stringify(firebaseData));
+      sceneManager.scenes = firebaseData.scenes;
       window.dispatchEvent(new Event('scenes-updated'));
+    } else {
+      console.log('[Firebase] Local is newer, keeping local');
     }
   });
 }
 
-export async function saveToFirebase(scenes) {
+async function withTimeout(promise, ms = 3000) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), ms))
+  ]);
+}
+
+export async function saveToFirebase(data) {
   if (!db) throw new Error('Firebase not initialized');
   if (!window.currentUser) throw new Error('Not logged in');
   
-  await set(ref(db, 'karen/scenes'), scenes);
-  console.log('[Firebase] Saved scenes');
+  await withTimeout(set(ref(db, 'karen/scenes'), data));
+  console.log('[Firebase] Saved');
+  window.dispatchEvent(new Event('firebase-synced'));
 }

@@ -114,18 +114,20 @@ button {
 }
 
 .button-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
 .state-wrapper {
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .btn-state {
   width: 100%;
-  padding: 15px;
+  padding: 22px;
   background: #444;
   color: #fff;
   font-size: 0.9rem;
@@ -143,10 +145,25 @@ button {
   color: #fff;
   font-size: 14px;
   border-radius: 4px;
+  z-index: 1;
 }
 
 .btn-edit:hover {
   background: rgba(0, 0, 0, 0.8);
+}
+
+.btn-add {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: rgba(0, 170, 0, 0.8);
+  color: #fff;
+  font-size: 16px;
+  border-radius: 4px;
+  z-index: 1;
 }
 
 .modal {
@@ -321,19 +338,6 @@ button {
   color: #fff;
   padding: 2px 8px;
   font-size: 0.8rem;
-}
-
-.btn-add {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  background: rgba(0, 170, 0, 0.8);
-  color: #fff;
-  font-size: 16px;
-  border-radius: 4px;
 }
 
 .btn-add:hover {

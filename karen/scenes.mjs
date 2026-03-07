@@ -1,22 +1,31 @@
 // Scene management with localStorage persistence
 export class SceneManager {
-  constructor() {
-    this.scenes = this.load();
+  constructor(firebaseSave) {
+    this.firebaseSave = firebaseSave;
+    this.scenes = [];
     this.currentScene = null;
   }
 
-  load() {
-    const data = localStorage.getItem('karen-scenes');
-    return data ? JSON.parse(data) : [];
+  async load() {
+    const localData = localStorage.getItem('karen-scenes');
+    const local = localData ? JSON.parse(localData) : { scenes: [], timestamp: 0 };
+    
+    this.scenes = local.scenes;
+    return local;
   }
 
-  save() {
-    localStorage.setItem('karen-scenes', JSON.stringify(this.scenes, null, 2));
-  }
-
-  saveToFirebase(firebaseSave) {
-    this.save();
-    return firebaseSave(this.scenes);
+  async save() {
+    const timestamp = Date.now();
+    const data = { scenes: this.scenes, timestamp };
+    localStorage.setItem('karen-scenes', JSON.stringify(data, null, 2));
+    
+    if (this.firebaseSave) {
+      try {
+        await this.firebaseSave(data);
+      } catch (err) {
+        console.warn('[SceneManager] Firebase sync failed:', err);
+      }
+    }
   }
 
   create(name) {
@@ -72,8 +81,16 @@ export class SceneManager {
     }
   }
 
+  rename(oldName, newName) {
+    const scene = this.scenes.find(s => s.name === oldName);
+    if (scene) {
+      scene.name = newName;
+      this.save();
+    }
+  }
+
   getAll() {
-    return this.scenes;
+    return this.scenes || [];
   }
 
   export() {
