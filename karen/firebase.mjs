@@ -12,6 +12,8 @@ export function initFirebase(app, sceneManager) {
     
     const localData = localStorage.getItem('karen-scenes');
     const local = localData ? JSON.parse(localData) : { scenes: [], timestamp: 0 };
+    local.timestamp = local.timestamp || -1;
+    firebaseData.timestamp = firebaseData.timestamp || 0;
     
     if (firebaseData.timestamp > local.timestamp) {
       console.log('[Firebase] Remote is newer, updating local');
