@@ -1,11 +1,23 @@
 import { SerialManager } from './serial.mjs';
+import { NetworkBridgeManager } from './wifi.mjs';
 import { builtInStates, characters } from './states.mjs';
 import { SceneManager } from './scenes.mjs';
 import { initFirebase, saveToFirebase } from './firebase.mjs';
 import { createBuiltInPanel, createCharacterPanel, createScenePanel } from './ui.mjs';
 
 const MAC_ADDRESS = '8C:4F:00:30:60:9C';
-const serial = new SerialManager();
+let manager;
+
+// Manager switch
+const useWifi = localStorage.getItem('useWifi') === 'true';
+document.getElementById('managerSwitch').checked = useWifi;
+manager = useWifi ? new NetworkBridgeManager() : new SerialManager();
+
+document.getElementById('managerSwitch').onchange = (e) => {
+  localStorage.setItem('useWifi', e.target.checked);
+  location.reload();
+};
+
 const sceneManager = new SceneManager(saveToFirebase);
 
 // Initialize Firebase (get app from global scope)
@@ -20,7 +32,7 @@ window.addEventListener('load', async () => {
   
   // Try to auto-connect to serial
   try {
-    if (await serial.autoConnect()) {
+    if (await manager.autoConnect()) {
       updateConnectionStatus(true);
       console.log('Auto-connected to serial port');
     }
@@ -32,7 +44,7 @@ window.addEventListener('load', async () => {
 // Connection handlers
 document.getElementById('btnConnect').onclick = async () => {
   try {
-    await serial.connect();
+    await manager.connect();
     updateConnectionStatus(true);
   } catch (err) {
     console.error('Connection failed:', err);
@@ -40,7 +52,7 @@ document.getElementById('btnConnect').onclick = async () => {
 };
 
 document.getElementById('btnDisconnect').onclick = async () => {
-  await serial.disconnect();
+  await manager.disconnect();
   updateConnectionStatus(false);
 };
 
@@ -52,20 +64,22 @@ function updateConnectionStatus(connected) {
 // Command senders
 async function activateState(stateName) {
   try {
-    await serial.send(MAC_ADDRESS, 'KAREN', `ACTIVATE|${stateName}`);
+    await manager.send(MAC_ADDRESS, 'KAREN', `ACTIVATE|${stateName}`);
     console.log(`Activated: ${stateName}`);
   } catch (err) {
     console.error('Send failed:', err);
+    updateConnectionStatus(manager.isConnected());
   }
 }
 
 async function createState(state) {
   try {
     const cmd = `CREATE|${state.name}|${state.base}|${state.r}|${state.g}|${state.b}|${state.brightness}`;
-    await serial.send(MAC_ADDRESS, 'KAREN', cmd);
+    await manager.send(MAC_ADDRESS, 'KAREN', cmd);
     console.log(`Created: ${state.name}`);
   } catch (err) {
     console.error('Send failed:', err);
+    updateConnectionStatus(serial.isConnected());
   }
 }
 

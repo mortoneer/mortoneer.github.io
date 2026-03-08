@@ -36,12 +36,19 @@ header {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #666;
+  background: #a00;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
 }
 
 .status-dot.connected {
   background: #0f0;
   box-shadow: 0 0 10px #0f0;
+  animation: none;
 }
 
 input[type="text"] {
@@ -79,12 +86,66 @@ button {
   background: #c00;
 }
 
+.btn-fullscreen {
+  background: #06a;
+  color: #fff;
+}
+
+.btn-fullscreen:hover {
+  background: #08c;
+}
+
+.switch-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.switch-label input[type="checkbox"] {
+  width: 40px;
+  height: 20px;
+  appearance: none;
+  background: #666;
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.switch-label input[type="checkbox"]:checked {
+  background: #0a0;
+}
+
+.switch-label input[type="checkbox"]::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  top: 2px;
+  left: 2px;
+  transition: left 0.3s;
+}
+
+.switch-label input[type="checkbox"]::checked::before {
+  left: 22px;
+}
+
 .scene-display {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
   padding: 20px;
   align-items: center;
+}
+
+@media (max-width: 768px) {
+  .scene-display {
+    grid-template-columns: 1fr;
+  }
 }
 
 .scene-card {

@@ -1,8 +1,20 @@
 import { SerialManager } from './serial.mjs';
+import { NetworkBridgeManager } from './wifi.mjs';
 import { SceneManager } from './scenes.mjs';
 
 const MAC_ADDRESS = '8C:4F:00:30:60:9C';
-const serial = new SerialManager();
+let manager;
+
+// Manager switch
+const useWifi = localStorage.getItem('useWifi') === 'true';
+document.getElementById('managerSwitch').checked = useWifi;
+manager = useWifi ? new NetworkBridgeManager() : new SerialManager();
+
+document.getElementById('managerSwitch').onchange = (e) => {
+  localStorage.setItem('useWifi', e.target.checked);
+  location.reload();
+};
+
 const sceneManager = new SceneManager();
 let scenes = [];
 let currentIndex = 0;
@@ -19,7 +31,7 @@ window.addEventListener('load', async () => {
   }
   
   try {
-    if (await serial.autoConnect()) {
+    if (await manager.autoConnect()) {
       updateConnectionStatus(true);
       console.log('Auto-connected to serial port');
     }
@@ -28,10 +40,21 @@ window.addEventListener('load', async () => {
   }
 });
 
+// Fullscreen
+document.getElementById('btnFullscreen').onclick = () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+    document.getElementById('btnFullscreen').textContent = 'Exit Full Screen';
+  } else {
+    document.exitFullscreen();
+    document.getElementById('btnFullscreen').textContent = 'Enter Full Screen';
+  }
+};
+
 // Connection
 document.getElementById('btnConnect').onclick = async () => {
   try {
-    await serial.connect();
+    await manager.connect();
     updateConnectionStatus(true);
   } catch (err) {
     console.error('Connection failed:', err);
@@ -39,7 +62,7 @@ document.getElementById('btnConnect').onclick = async () => {
 };
 
 document.getElementById('btnDisconnect').onclick = async () => {
-  await serial.disconnect();
+  await manager.disconnect();
   updateConnectionStatus(false);
 };
 
@@ -73,7 +96,7 @@ async function activateScene(scene) {
   const action = scene.actions[0];
   
   try {
-    await serial.send(MAC_ADDRESS, 'KAREN', `ACTIVATE|${action.state}`);
+    await manager.send(MAC_ADDRESS, 'KAREN', `ACTIVATE|${action.state}`);
     console.log(`[Show] Scene ${currentIndex + 1}: ${scene.name}`);
   } catch (err) {
     console.error('Send failed:', err);

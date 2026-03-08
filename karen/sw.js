@@ -1,4 +1,4 @@
-const CACHE = 'karen-v2';
+const CACHE = 'karen-v5';
 const FILES = [
   './',
   './index.html',
@@ -9,6 +9,7 @@ const FILES = [
   './scenes.mjs',
   './states.mjs',
   './serial.mjs',
+  './wifi.mjs',
   './firebase.mjs',
   './style.css',
   './show.css'
