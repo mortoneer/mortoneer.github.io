@@ -69,7 +69,7 @@ export class SceneManager {
       scene = this.create(sceneName);
     }
 
-    scene.actions = [action]; // Replace with single action
+    scene.actions.push(action);
     this.save();
   }
 

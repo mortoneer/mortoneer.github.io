@@ -203,6 +203,7 @@ export function createScenePanel(sceneManager, onPlay, onSave) {
       header.innerHTML = `
         <span class="scene-name">${scene.name}</span>
         <button class="btn-rename" data-index="${index}">✎</button>
+        <button class="btn-add-sound" data-index="${index}">🔊</button>
         <button class="btn-up" data-index="${index}">↑</button>
         <button class="btn-down" data-index="${index}">↓</button>
         <button class="btn-play" data-index="${index}">▶</button>
@@ -215,8 +216,15 @@ export function createScenePanel(sceneManager, onPlay, onSave) {
       scene.actions.forEach((action, i) => {
         const actionEl = document.createElement('div');
         actionEl.className = 'action-item';
+        let display;
+        if (action.type === 'playSound') {
+          const cueInfo = action.cues?.length ? ` [${action.cues.length} cues]` : '';
+          display = `🔊 sound${cueInfo}`;
+        } else {
+          display = `${action.type}: ${action.state || action.delay + 'ms'}`;
+        }
         actionEl.innerHTML = `
-          <span>${action.type}: ${action.state || action.delay + 'ms'}</span>
+          <span>${display}</span>
           <button class="btn-remove" data-index="${index}" data-action="${i}">✕</button>
         `;
         actions.appendChild(actionEl);
@@ -231,6 +239,16 @@ export function createScenePanel(sceneManager, onPlay, onSave) {
     const scenes = sceneManager.getAll();
     const index = parseInt(e.target.dataset.index);
     
+    if (e.target.classList.contains('btn-add-sound')) {
+      const url = prompt('Enter sound file URL:');
+      if (!url) return;
+      
+      const cuesInput = prompt('Enter cue timestamps in seconds (comma-separated, optional):');
+      const cues = cuesInput ? cuesInput.split(',').map(t => parseFloat(t.trim())).filter(t => !isNaN(t)) : [];
+      
+      sceneManager.addAction(scenes[index].name, { type: 'playSound', url, cues });
+      renderScenes();
+    }
     if (e.target.classList.contains('btn-up')) {
       sceneManager.moveUp(scenes[index].name);
       renderScenes();

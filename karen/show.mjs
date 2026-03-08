@@ -1,6 +1,7 @@
 import { SerialManager } from './serial.mjs';
 import { NetworkBridgeManager } from './wifi.mjs';
 import { SceneManager } from './scenes.mjs';
+import { SoundManager } from './sounds.mjs';
 
 const MAC_ADDRESS = '8C:4F:00:30:60:9C';
 let manager;
@@ -16,6 +17,7 @@ document.getElementById('managerSwitch').onchange = (e) => {
 };
 
 const sceneManager = new SceneManager();
+const soundManager = new SoundManager();
 let scenes = [];
 let currentIndex = 0;
 
@@ -23,6 +25,18 @@ let currentIndex = 0;
 window.addEventListener('load', async () => {
   await sceneManager.load();
   scenes = sceneManager.getAll();
+  
+  // Preload sounds
+  const soundUrls = scenes.flatMap(s => s.actions || [])
+    .filter(a => a.type === 'playSound' && a.url)
+    .map(a => a.url);
+  
+  if (soundUrls.length > 0 && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({
+      type: 'CACHE_SOUNDS',
+      urls: soundUrls
+    });
+  }
   
   if (scenes.length > 0) {
     goToScene(0);
@@ -93,13 +107,33 @@ function prevScene() {
 
 async function activateScene(scene) {
   if (!scene.actions || scene.actions.length === 0) return;
-  const action = scene.actions[0];
   
-  try {
-    await manager.send(MAC_ADDRESS, 'KAREN', `ACTIVATE|${action.state}`);
-    console.log(`[Show] Scene ${currentIndex + 1}: ${scene.name}`);
-  } catch (err) {
-    console.error('Send failed:', err);
+  for (const action of scene.actions) {
+    if (action.type === 'activate') {
+      try {
+        await manager.send(MAC_ADDRESS, 'KAREN', `ACTIVATE|${action.state}`);
+        console.log(`[Show] Scene ${currentIndex + 1}: ${scene.name}`);
+      } catch (err) {
+        console.error('Send failed:', err);
+      }
+    } else if (action.type === 'playSound') {
+      try {
+        const cues = action.cues || [];
+        let cueIndex = 0;
+        
+        soundManager.onTimeUpdate = (time) => {
+          if (cueIndex < cues.length && time >= cues[cueIndex]) {
+            cueIndex++;
+            nextScene();
+          }
+        };
+        
+        soundManager.onEnded = () => nextScene();
+        await soundManager.play(action.url);
+      } catch (err) {
+        console.error('Sound playback failed:', err);
+      }
+    }
   }
 }
 
