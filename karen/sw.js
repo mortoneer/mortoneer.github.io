@@ -1,4 +1,4 @@
-const CACHE = 'karen-v8';
+const CACHE = 'karen-v9';
 const SOUND_CACHE = 'karen-sounds-v1';
 const FILES = [
   './',
