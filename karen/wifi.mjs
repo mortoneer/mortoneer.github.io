@@ -1,50 +1,29 @@
 export class NetworkBridgeManager {
   constructor() {
-    this.ws = null;
-    this.url = 'ws://192.168.4.1/ws';
+    this.url = 'http://192.168.4.1';
   }
 
   async autoConnect() {
     try {
-      const response = await fetch('http://192.168.4.1/status', { signal: AbortSignal.timeout(1000) });
-      if (response.ok) return await this.open();
+      const response = await fetch(`${this.url}/status`, { signal: AbortSignal.timeout(1000) });
+      return response.ok;
     } catch { return false; }
-    return false;
   }
 
-  async connect() { return await this.open(); }
-
-  async open() {
-    return new Promise((resolve, reject) => {
-      this.ws = new WebSocket(this.url);
-      this.ws.onopen = () => resolve(true);
-      this.ws.onerror = () => reject(false);
-    });
-  }
-
-  async disconnect() {
-    if (this.ws) { this.ws.close(); this.ws = null; }
-  }
+  async connect() { return await this.autoConnect(); }
+  async disconnect() {}
 
   async send(mac, eventType, data) {
-    // 1. Check if the WebSocket is actually ready
-    if (!this.isConnected()) {
-      throw new Error('Not connected');
-    }
-
-    // 2. Wrap in a try-catch to catch abrupt failures
-    try {
-      // Wire format: RELAY|<mac>|<eventType>|<data>
-      // e.g. RELAY|aa:bb:cc:dd:ee:ff|KAREN|ACTIVATE|scene1
-      this.ws.send(`RELAY|${mac}|${eventType}|${data}`);
-    } catch (error) {
-      console.error('Send failed, cleaning up...', error);
-      this.disconnect();
-      throw error;
-    }
+    // Wire format: POST /relay  body: <mac>|<eventType>|<data>
+    // e.g. aa:bb:cc:dd:ee:ff|KAREN|ACTIVATE|scene1
+    const body = data ? `${mac}|${eventType}|${data}` : `${mac}|${eventType}`;
+    const response = await fetch(`${this.url}/relay`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body,
+    });
+    if (!response.ok) throw new Error(`Relay failed: ${response.status}`);
   }
 
-  isConnected() {
-    return this.ws !== null && this.ws.readyState === WebSocket.OPEN;
-  }
+  async isConnected() { return await this.autoConnect(); }
 }

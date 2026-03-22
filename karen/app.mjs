@@ -68,7 +68,7 @@ async function activateState(stateName) {
     console.log(`Activated: ${stateName}`);
   } catch (err) {
     console.error('Send failed:', err);
-    updateConnectionStatus(manager.isConnected());
+    updateConnectionStatus(await manager.isConnected());
   }
 }
 
@@ -79,7 +79,7 @@ async function createState(state) {
     console.log(`Created: ${state.name}`);
   } catch (err) {
     console.error('Send failed:', err);
-    updateConnectionStatus(serial.isConnected());
+    updateConnectionStatus(await manager.isConnected());
   }
 }
 
