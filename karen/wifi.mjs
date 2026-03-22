@@ -34,7 +34,9 @@ export class NetworkBridgeManager {
 
     // 2. Wrap in a try-catch to catch abrupt failures
     try {
-      this.ws.send(`RELAY|${mac}|${eventType}:${data}`);
+      // Wire format: RELAY|<mac>|<eventType>|<data>
+      // e.g. RELAY|aa:bb:cc:dd:ee:ff|KAREN|ACTIVATE|scene1
+      this.ws.send(`RELAY|${mac}|${eventType}|${data}`);
     } catch (error) {
       console.error('Send failed, cleaning up...', error);
       this.disconnect();
