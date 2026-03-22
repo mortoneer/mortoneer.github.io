@@ -159,7 +159,7 @@ document.addEventListener('keydown', (e) => {
   } else if (e.key === 'ArrowUp') {
     e.preventDefault();
     retriggerScene();
-  }
+  } else if (e.key === 'ArrowLeft') {
     e.preventDefault();
     prevScene();
   }
