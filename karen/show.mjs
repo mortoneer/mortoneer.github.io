@@ -189,6 +189,8 @@ function render() {
   const currentCard = document.querySelector('.scene-card.current');
   currentCard.querySelector('.scene-number').textContent = `Scene ${currentIndex + 1} / ${scenes.length}`;
   currentCard.querySelector('.scene-name').textContent = current?.name || 'No scenes';
+  currentCard.style.cursor = 'pointer';
+  currentCard.onclick = () => retriggerScene();
   
   // Next scene
   const nextCard = document.querySelector('.scene-card.next');
