@@ -137,12 +137,29 @@ async function activateScene(scene) {
   }
 }
 
-// Keyboard controls
+async function retriggerScene() {
+  const scene = scenes[currentIndex];
+  if (!scene?.actions) return;
+  for (const action of scene.actions) {
+    if (action.type === 'activate') {
+      try {
+        await manager.send(MAC_ADDRESS, 'KAREN', `ACTIVATE|${action.state}`);
+      } catch (err) {
+        console.error('Retrigger failed:', err);
+      }
+    }
+  }
+}
+
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight' || e.key === ' ') {
     e.preventDefault();
     nextScene();
-  } else if (e.key === 'ArrowLeft') {
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    retriggerScene();
+  }
     e.preventDefault();
     prevScene();
   }
